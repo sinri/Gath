@@ -1,9 +1,0 @@
-fengshen==0.0.1a2
-diffusers==0.16.1
-transformers==4.29.2
-accelerate
-torch
-torchaudio
-torchvision
-pytorch_lightning==1.8.6
-xformers==0.0.20+1d635e1.d20230519

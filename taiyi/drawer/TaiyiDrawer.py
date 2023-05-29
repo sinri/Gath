@@ -1,6 +1,8 @@
 from typing import Union, List
 
-from diffusers import StableDiffusionPipeline, AutoencoderKL
+from diffusers import StableDiffusionPipeline, AutoencoderKL, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler
+from tokenizers import Tokenizer
+from transformers import CLIPTokenizer
 
 
 class TaiyiDrawer:
@@ -16,7 +18,44 @@ class TaiyiDrawer:
             safety_checker (StableDiffusionSafetyChecker) — Classification module that estimates whether generated images could be considered offensive or harmful. Please, refer to the model card for details.
             feature_extractor (CLIPImageProcessor) — Model that extracts features from generated images to be used as inputs for the safety_checker.
         """
+
+        # if kwargs.__contains__('tokenizer'):
+        # CLIPTokenizer(vae)
+
         self.__stable_diffusion = StableDiffusionPipeline.from_pretrained(vae, **kwargs).to("cuda")
+
+        print(self.__stable_diffusion.tokenizer)
+
+    def turn_off_nsfw_check(self):
+        """
+        https://github.com/CompVis/stable-diffusion/issues/239#issuecomment-1241838550
+        """
+        self.__stable_diffusion.safety_checker = lambda images, clip_input: (images, False)
+        return self
+
+    def change_scheduler(self, new_scheduler):
+        """
+        DDIMScheduler
+        DPMSolverMultistepScheduler (別名 DPM-Solver++ diffusers v0.8.0~)
+        LMSDiscreteScheduler
+        PNDMScheduler
+        EulerDiscreteScheduler　(diffusers v0.7.0~)
+        EulerAncestralDiscreteScheduler (略称 Euler a, diffusers v0.7.0~)
+
+        デフォルトではPNDMSchedulerになっているそうです。
+        また、0.7.0で追加されたEuler系Schedulerは計算速度が高速で、20~30ステップでも良い結果を出力してくれるそうです。
+
+        :param new_scheduler:
+        :return:
+        """
+        self.__stable_diffusion.scheduler = new_scheduler
+        return self
+
+    def change_scheduler_to_euler_discrete(self):
+        return EulerDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config)
+
+    def change_scheduler_to_euler_ancestral_discrete(self):
+        return EulerAncestralDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config)
 
     def draw(self, prompt: Union[str, List[str]], **kwargs):
         """

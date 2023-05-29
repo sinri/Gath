@@ -1,0 +1,22 @@
+model:
+  name: stable-diffusion-v1-5
+  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5
+tokenizer:
+  name: unknown
+  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5\tokenizer
+  max_length: 1024
+height: 768
+width: 512
+long_prompt_arg: 4
+prompt: >
+  realistic,from side,server room,lolita fasion,pink hair, loli, school uniform, long hair, glasses, hair ribbon, 
+  white stocking, at school,striped_thighhighs,
+negative_prompt: >
+  lowres, bad anatomy, bad hands, text,error, missing fingers,extra digt ,fewer digits,cropped, wort quality ,low quality,
+  normal quality, jpeg artifacts,signature,watermark, username, blurry, bad feet lowres, bad anatomy, bad hands, text,error, 
+  missing fingers,extra digt ,fewer digits,cropped, wort quality ,low quality,normal quality, jpeg artifacts,signature,
+  watermark, username, blurry, bad feet,
+steps: 28
+cfg: 12
+scheduler: euler_a
+turn_off_nsfw_check: true
