@@ -5,18 +5,32 @@ tokenizer:
   name: unknown
   path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5\tokenizer
   max_length: 1024
+device: cuda
 height: 768
 width: 512
 long_prompt_arg: 4
 prompt: >
-  realistic,from side,server room,lolita fasion,pink hair, loli, school uniform, long hair, glasses, hair ribbon, 
-  white stocking, at school,striped_thighhighs,
+  realistic, from side,
+  server room,
+  loli,
+  business suit,
+  black hair, long hair, hair ribbon, 
+  glasses,
+  white stocking
 negative_prompt: >
-  lowres, bad anatomy, bad hands, text,error, missing fingers,extra digt ,fewer digits,cropped, wort quality ,low quality,
-  normal quality, jpeg artifacts,signature,watermark, username, blurry, bad feet lowres, bad anatomy, bad hands, text,error, 
-  missing fingers,extra digt ,fewer digits,cropped, wort quality ,low quality,normal quality, jpeg artifacts,signature,
-  watermark, username, blurry, bad feet,
-steps: 28
-cfg: 12
+  lowres, bad anatomy, 
+  bad hands, missing fingers, bad feet,
+  text, error, extra digt, fewer digits, cropped,
+  wort quality,low quality, normal quality, blurry,
+  jpeg artifacts,
+  signature,watermark, username,
+# 降噪步数 数字越大，时间越长
+steps: 50
+# 遵循提示词的级别 数字越大越接近提示词，但图像质量会下降 CFG?
+cfg: 15
 scheduler: euler_a
 turn_off_nsfw_check: true
+generator:
+  framework: torch
+# 可以指定seed 也可以不指定走随机
+#  seed: 0

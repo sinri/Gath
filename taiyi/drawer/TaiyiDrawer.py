@@ -22,9 +22,18 @@ class TaiyiDrawer:
         # if kwargs.__contains__('tokenizer'):
         # CLIPTokenizer(vae)
 
-        self.__stable_diffusion = StableDiffusionPipeline.from_pretrained(vae, **kwargs).to("cuda")
+        self.__stable_diffusion = StableDiffusionPipeline.from_pretrained(vae, **kwargs)
 
-        print(self.__stable_diffusion.tokenizer)
+        # print(self.__stable_diffusion.tokenizer)
+
+    def to_device(self, device):
+        """
+        Change device, so you may use CUDA.
+        :param device: such as `cuda`
+        :return:
+        """
+        self.__stable_diffusion = self.__stable_diffusion.to(device)
+        return self
 
     def turn_off_nsfw_check(self):
         """

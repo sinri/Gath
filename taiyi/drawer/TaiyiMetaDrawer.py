@@ -1,5 +1,7 @@
+import random
 from typing import Optional
 
+import torch
 from transformers import CLIPTokenizer
 
 from taiyi.drawer.TaiyiDrawer import TaiyiDrawer
@@ -18,6 +20,10 @@ class TaiyiMetaDrawer:
         self.__turn_off_nsfw_check = False
         if self.__draw_meta.__contains__('turn_off_nsfw_check'):
             self.__turn_off_nsfw_check = self.__draw_meta['turn_off_nsfw_check']
+
+        self.__device = None
+        if self.__draw_meta.__contains__("device"):
+            self.__device = self.__draw_meta['device']
 
     def __generate_tokenizer(self):
         if not self.__draw_meta.__contains__('tokenizer'):
@@ -60,6 +66,9 @@ class TaiyiMetaDrawer:
         else:
             drawer = TaiyiDrawer(model_meta['name'], **params)
 
+        if self.__device is not None:
+            drawer.to_device(self.__device)
+
         if self.__turn_off_nsfw_check:
             drawer.turn_off_nsfw_check()
 
@@ -82,44 +91,48 @@ class TaiyiMetaDrawer:
     def draw(self, output_image_file: Optional[str] = None):
         drawer = self.__generate_drawer()
 
-        height = self.__draw_meta['height']
-        width = self.__draw_meta['width']
-
-        # 提示词
-        prompt = self.__draw_meta['prompt']
-        # 负面提示词
-        negative_prompt = self.__draw_meta['negative_prompt']
-        # 降噪步数 数字越大，时间越长
-        num_inference_steps = self.__draw_meta['steps']
-        # 遵循提示词的级别 数字越大越接近提示词，但图像质量会下降 CFG?
-        guidance_scale = self.__draw_meta['cfg']
+        params = {
+            'height': self.__draw_meta['height'],
+            'width': self.__draw_meta['width'],
+            'num_inference_steps': self.__draw_meta['steps'],
+            'guidance_scale': self.__draw_meta['cfg'],
+            'negative_prompt': self.__draw_meta['negative_prompt'],
+        }
 
         if self.__long_prompt_arg > 1:
-            drawn = drawer.draw(
-                prompt,
-                height=height,
-                width=width,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale,
-                negative_prompt=negative_prompt,
-                max_embeddings_multiples=self.__long_prompt_arg
-            )
-        else:
-            drawn = drawer.draw(
-                prompt,
-                height=height,
-                width=width,
-                num_inference_steps=num_inference_steps,
-                guidance_scale=guidance_scale,
-                negative_prompt=negative_prompt
-            )
+            params['max_embeddings_multiples'] = self.__long_prompt_arg
+
+        if self.__draw_meta.__contains__("generator"):
+            generator_meta = self.__draw_meta['generator']
+            if isinstance(generator_meta, dict):
+
+                if generator_meta.__contains__("framework"):
+                    framework = generator_meta['framework']
+                    if framework != 'torch':
+                        raise RuntimeError("Only My Torch!")
+
+                if self.__device is not None:
+                    generator = torch.Generator(device=self.__device)
+                else:
+                    generator = torch.Generator()
+
+                seed = None
+                if generator_meta.__contains__('seed'):
+                    seed = generator_meta['seed']
+                if seed is None:
+                    seed = random.randint(1, 1024)
+
+                generator.manual_seed(seed)
+
+                params['generator'] = generator
+
+        if self.__draw_meta.__contains__("device"):
+            drawer.to_device(self.__draw_meta['device'])
+
+        drawn = drawer.draw(self.__draw_meta['prompt'], **params)
 
         image = drawn.images[0]
         if output_image_file is None:
             image.show()
         else:
             image.save(output_image_file)
-
-        # filename = SampleConstant.output_dir + f"\\NijiGirl-{time.time()}.jpg"
-        # image.save(filename)
-        # print(f"saved: {filename}")
