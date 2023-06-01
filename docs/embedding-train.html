@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Train with Embedding - Taiyi Drawer</title>
+</head>
+<body>
+<h1>
+    Train with Embedding - Taiyi Drawer
+</h1>
+<div>
+    <h2>Textual Inversion</h2>
+    <p>
+        From Stable Diffusion WebUI Wiki about
+        <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Textual-Inversion">Textual-Inversion</a>:
+        Teach the base model new vocabulary about a particular concept with a couple of images reflecting that concept.
+    </p>
+</div>
+<div>
+    <h2>Train with Stable Diffusion WebUI</h2>
+    <h3>Determine the subject</h3>
+    <p>Determine the subject and its keyword to be used in prompt. The keyword is also the Embedding Name.</p>
+    <h3>Collect source materials</h3>
+    <p>Prepare some good images in 512×512 pixels, with white border.</p>
+    <p>
+        Your GPU should have at least 6GB memory to train 512 pixels level images.
+        If your GPU Memory is lower than 10GB, check the checkbox named
+        <code>Move VAE and CLIP to RAM when training if possible. Saves VRAM.</code>
+        in Train tab to save memory.
+    </p>
+    <p>
+        <a href="https://www.birme.net/?target_width=512&target_height">BIRME</a>
+        is a flexible and easy to use bulk image resizer site.
+    </p>
+    <h3>Generate an embedding</h3>
+    <p>In 'Train' Tab, under the 'Create embedding' Tab.</p>
+    <p>
+        Set your embedding keyword as <code>name</code>;
+        and input the <code>number of vectors per token</code>.
+    </p>
+    <p>
+        Simply, let t be the number of tokens, let v be the number of vectors per token,
+        then the number of material images needed
+        <code>Token Count × Vector Count Per Token = Material Images Count</code>.
+        To train for subject, v should be at least 6;
+        as for style, at least 12.
+    </p>
+    <p>
+        Finally, click the button to create the embedding.
+    </p>
+    <h3>Preprocess the material images</h3>
+    <p>In 'Train' Tab, under the 'Preprocess images' Tab.</p>
+    <p>
+        Set the directories and the image size (512),
+        check the checkboxes named 'create flipped copies' and 'Use deepbooru for caption'.
+    </p>
+    <p>
+        Click the button to preprocess.
+    </p>
+    <h3>Start to train embedding</h3>
+    <p>
+        In 'Train' Tab, under the 'Train' Tab.
+    </p>
+    <p>
+        Select the embedding created just now.
+    </p>
+    <p>
+        Set the <code>Embedding Learning rate</code>.
+        <br>
+        Some tips:
+        <br>
+        Try with the default learning rate, interrupt before finish, reduce it, then resume.
+        <br>
+        Use preset steps, such as <code>0.005:100,1e-3:1000,1e-5</code>.
+        <br>
+        A three-steps-method:
+        (1) run steps with images background-less;
+        (2) add some images with little background, use a learning rate as 10% of the original;
+        (3) finally, add many images with background, use a lower learning rate.
+    </p>
+    <p>
+        Set prompt template, 'style_filewords.txt' or 'subject_filewords.txt'.
+    </p>
+    <p>
+        Set the max steps.
+    </p>
+    <p>
+        Check checkbox named 'Save images with embedding in PNG chunks'.
+    </p>
+    <p>
+        Start with a click on the button!
+    </p>
+</div>
+<div>
+    <h2>Usage</h2>
+    <p>
+        Embedding Train would generate a file with extension <code>.pt</code>.
+    </p>
+    <p>
+        To use it in Stable Diffusion WebUI,
+        just put Embedding File into <code>/path/to/stable-diffusion-webui/embedding/</code>,
+        and put its keyword, commonly its file name, into the positive prompt.
+    </p>
+    <p>
+        To use it in Taiyi Drawer, use the path of Embedding File as parameter in <code>taiyi.drawer.TaiyiDrawer.TaiyiDrawer.load_textual_inversion</code>.
+    </p>
+</div>
+</body>
+</html>
