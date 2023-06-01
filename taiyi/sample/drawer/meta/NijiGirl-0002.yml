@@ -10,13 +10,8 @@ height: 768
 width: 512
 long_prompt_arg: 4
 prompt: >
-  realistic, from side,
-  server room,
-  loli,
-  business suit,
-  black hair, long hair, hair ribbon, 
-  glasses,
-  white stocking
+  loli girl moon night light lake glass,cinematic angle,torii,anime screencap,
+  straight hair,looking up,standing,white skirt,loose_socks,platinum_hair,ribbon,
 negative_prompt: >
   lowres, bad anatomy, 
   bad hands, missing fingers, bad feet,
@@ -27,7 +22,7 @@ negative_prompt: >
 # 降噪步数 数字越大，时间越长
 steps: 30
 # 遵循提示词的级别 数字越大越接近提示词，但图像质量会下降 CFG?
-cfg: 8
+cfg: 12
 scheduler: euler_a
 turn_off_nsfw_check: true
 generator:

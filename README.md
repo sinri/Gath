@@ -57,3 +57,7 @@ See its MAIN for more information.
   * 关键字占比控制
     * 比如 [dog:girl:0.9] 表示总绘制步骤的前 90% 画狗，后面画女孩
     * 而 [dog:girl:30] 则表示前三十步画狗，后面画女孩
+
+## Embeddings
+
+[With WebUI](https://www.bilibili.com/read/cv20183008?from=search)

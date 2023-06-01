@@ -1,0 +1,26 @@
+model:
+  name: waifu-diffusion
+  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\waifu-diffusion
+tokenizer:
+  name: unknown
+  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\waifu-diffusion\tokenizer
+  max_length: 1024
+device: cuda
+height: 768
+width: 512
+long_prompt_arg: 4
+prompt: >
+  looking at viewer, realistic, girl, twin drills,smirk,slit pupils,business suit,FLIGHT Goggles,loose_socks,
+negative_prompt: >
+  lowres, bad anatomy, bad hands, ((text)), (watermark), error, missing fingers, extra digit, fewer digits, cropped, 
+  worst quality, low quality, normal quality, ((username)), blurry,  (extra limbs),
+# 降噪步数 数字越大，时间越长
+steps: 30
+# 遵循提示词的级别 数字越大越接近提示词，但图像质量会下降 CFG?
+cfg: 12
+scheduler: euler_a
+turn_off_nsfw_check: true
+generator:
+  framework: torch
+# 可以指定seed 也可以不指定走随机
+#  seed: 0

@@ -74,6 +74,16 @@ class TaiyiMetaDrawer:
 
         self.__decide_scheduler(drawer)
 
+        if self.__draw_meta.__contains__('textual_inversion'):
+            textual_inversion = self.__draw_meta['textual_inversion']
+            if not isinstance(textual_inversion, dict):
+                raise RuntimeError()
+            if textual_inversion.__contains__('name'):
+                textual_inversion_v = textual_inversion['name']
+            else:
+                textual_inversion_v = textual_inversion['path']
+            drawer.load_textual_inversion(textual_inversion_v)
+
         return drawer
 
     def __decide_scheduler(self, drawer):

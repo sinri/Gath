@@ -5,29 +5,22 @@ tokenizer:
   name: unknown
   path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5\tokenizer
   max_length: 1024
+# if you need to use Embedding and Hyper Network Trained File
+textual_inversion:
+  path: E:\sinri\stable-diffusion-webui\embeddings\a blue-white monster named lxq.pt
 device: cuda
 height: 768
 width: 512
 long_prompt_arg: 4
 prompt: >
-  realistic, from side,
-  server room,
-  loli,
-  business suit,
-  black hair, long hair, hair ribbon, 
-  glasses,
-  white stocking
+  a photo of a blue-white monster named lxq, stars, light, looking at viewer,
 negative_prompt: >
-  lowres, bad anatomy, 
-  bad hands, missing fingers, bad feet,
-  text, error, extra digt, fewer digits, cropped,
-  wort quality,low quality, normal quality, blurry,
-  jpeg artifacts,
-  signature,watermark, username,
+  lowres, bad anatomy, bad hands, ((text)), (watermark), error, missing fingers, extra digit, fewer digits, cropped, 
+  worst quality, low quality, normal quality, ((username)), blurry,  (extra limbs),
 # 降噪步数 数字越大，时间越长
 steps: 30
 # 遵循提示词的级别 数字越大越接近提示词，但图像质量会下降 CFG?
-cfg: 8
+cfg: 10
 scheduler: euler_a
 turn_off_nsfw_check: true
 generator:

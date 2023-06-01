@@ -9,10 +9,13 @@ from taiyi.drawer.TaiyiMetaDrawer import TaiyiMetaDrawer
 from taiyi.sample.drawer.SampleConstant import SampleConstant
 
 if __name__ == '__main__':
-    with open('./meta/NijiGirl-0001.yml', 'r', encoding='utf-8') as f:
+    with open('./meta/NijiGirl-0004.yml', 'r', encoding='utf-8') as f:
         draw_meta = yaml.safe_load(f)
     print(draw_meta)
 
     filename = SampleConstant.output_dir + f"\\NijiGirl-{time.time()}.jpg"
     TaiyiMetaDrawer(draw_meta).draw(filename)
     print(f"saved: {filename}")
+
+    # self.__stable_diffusion.load_textual_inversion(
+    #             'E:\\sinri\\stable-diffusion-webui\\embeddings\\a blue-white monster named lxq.pt')

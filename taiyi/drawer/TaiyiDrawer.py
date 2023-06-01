@@ -35,11 +35,23 @@ class TaiyiDrawer:
         self.__stable_diffusion = self.__stable_diffusion.to(device)
         return self
 
+    def load_textual_inversion(self, pretrained_model_name_or_path):
+        """
+        :param pretrained_model_name_or_path: The embedding or hyper network file (.pt)
+        :return:
+        """
+        self.__stable_diffusion.load_textual_inversion(pretrained_model_name_or_path)
+        return self
+
+    @staticmethod
+    def build_dummy_safety_checker():
+        return lambda images, clip_input: (images, False)
+
     def turn_off_nsfw_check(self):
         """
         https://github.com/CompVis/stable-diffusion/issues/239#issuecomment-1241838550
         """
-        self.__stable_diffusion.safety_checker = lambda images, clip_input: (images, False)
+        self.__stable_diffusion.safety_checker = self.build_dummy_safety_checker()
         return self
 
     def change_scheduler(self, new_scheduler):
