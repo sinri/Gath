@@ -7,13 +7,13 @@ tokenizer:
   max_length: 1024
 # if you need to use Embedding and Hyper Network Trained File
 textual_inversion:
-  path: E:\sinri\stable-diffusion-webui\embeddings\a blue-white monster named lxq.pt
+  path: E:\sinri\stable-diffusion-webui\embeddings\a blue-white monster named lxq-6000.pt
 device: cuda
 height: 768
 width: 512
 long_prompt_arg: 4
 prompt: >
-  a photo of a blue-white monster named lxq, stars, light, looking at viewer,
+  a photo of a blue-white monster named lxq-6000, stars, light, looking at viewer,
 negative_prompt: >
   lowres, bad anatomy, bad hands, ((text)), (watermark), error, missing fingers, extra digit, fewer digits, cropped, 
   worst quality, low quality, normal quality, ((username)), blurry,  (extra limbs),
@@ -27,3 +27,7 @@ generator:
   framework: torch
 # 可以指定seed 也可以不指定走随机
 #  seed: 0
+# Load extra LoRA weight safetensors
+lora:
+  checkpoint_path: E:\sinri\sd-scripts\workspace\lxq\trained_model\stable-diffusion-v1-5-lxq-3.safetensors
+  multiplier: 1

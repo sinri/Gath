@@ -74,6 +74,14 @@ class TaiyiMetaDrawer:
 
         self.__decide_scheduler(drawer)
 
+        if self.__draw_meta.__contains__('lora'):
+            lora_meta = self.__draw_meta['lora']
+            checkpoint_path = lora_meta['checkpoint_path']
+            multiplier = 1
+            if lora_meta.__contains__('multiplier'):
+                multiplier = lora_meta['multiplier']
+            drawer.load_lora_weights(checkpoint_path, multiplier, self.__device)
+
         if self.__draw_meta.__contains__('textual_inversion'):
             textual_inversion = self.__draw_meta['textual_inversion']
             if not isinstance(textual_inversion, dict):
