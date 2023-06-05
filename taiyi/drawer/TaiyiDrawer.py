@@ -42,6 +42,7 @@ class TaiyiDrawer:
         :return:
         """
         self.__stable_diffusion.load_textual_inversion(pretrained_model_name_or_path)
+        print(f'Loaded Textual Inversion (Embedding): {pretrained_model_name_or_path}')
         return self
 
     def load_lora_weights(self, checkpoint_path, multiplier, device):
