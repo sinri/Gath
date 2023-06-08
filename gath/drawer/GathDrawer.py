@@ -3,7 +3,8 @@ from collections import defaultdict
 from typing import Union, List, Optional
 
 import torch
-from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler
+from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler, \
+    DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler
 from safetensors.torch import load_file
 
 
@@ -22,7 +23,8 @@ class GathDrawer:
     @classmethod
     def from_ckpt(cls, pretrained_model_link_or_path, **kwargs):
         """
-        :see diffusers.loaders.FromCkptMixin.from_ckpt
+        It would cause a download for the base model.
+        see diffusers.loaders.FromCkptMixin.from_ckpt
         :param pretrained_model_link_or_path:
         :param kwargs:
         :return:
@@ -141,10 +143,23 @@ class GathDrawer:
         return self
 
     def change_scheduler_to_euler_discrete(self):
-        return EulerDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config)
+        return self.change_scheduler(EulerDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config))
 
     def change_scheduler_to_euler_ancestral_discrete(self):
-        return EulerAncestralDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config)
+        return self.change_scheduler(
+            EulerAncestralDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config))
+
+    def change_scheduler_to_ddim(self):
+        return self.change_scheduler(DDIMScheduler.from_config(self.__stable_diffusion.scheduler.config))
+
+    def change_scheduler_to_dpm_solver_multistep(self):
+        return self.change_scheduler(DPMSolverMultistepScheduler.from_config(self.__stable_diffusion.scheduler.config))
+
+    def change_scheduler_to_lms_discrete(self):
+        return self.change_scheduler(LMSDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config))
+
+    def change_scheduler_to_pndm(self):
+        return self.change_scheduler(PNDMScheduler.from_config(self.__stable_diffusion.scheduler.config))
 
     def draw(self, prompt: Union[str, List[str]], **kwargs):
         """

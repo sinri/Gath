@@ -111,6 +111,14 @@ class GathMetaDrawer:
             drawer.change_scheduler_to_euler_ancestral_discrete()
         elif scheduler == 'euler':
             drawer.change_scheduler_to_euler_discrete()
+        elif scheduler == 'ddim':
+            drawer.change_scheduler_to_ddim()
+        elif scheduler == 'pndm':
+            drawer.change_scheduler_to_pndm()
+        elif scheduler == 'dpm_sm':
+            drawer.change_scheduler_to_dpm_solver_multistep()
+        elif scheduler == 'lms':
+            drawer.change_scheduler_to_lms_discrete()
         elif scheduler is None or scheduler == '':
             print("USE DEFAULT SCHEDULER")
         else:
