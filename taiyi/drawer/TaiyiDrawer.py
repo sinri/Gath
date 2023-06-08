@@ -3,7 +3,7 @@ from collections import defaultdict
 from typing import Union, List, Optional
 
 import torch
-from diffusers import StableDiffusionPipeline, AutoencoderKL, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler
+from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler
 from safetensors.torch import load_file
 
 
