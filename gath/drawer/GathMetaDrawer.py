@@ -4,10 +4,10 @@ from typing import Optional
 import torch
 from transformers import CLIPTokenizer
 
-from taiyi.drawer.TaiyiDrawer import TaiyiDrawer
+from gath.drawer.GathDrawer import GathDrawer
 
 
-class TaiyiMetaDrawer:
+class GathMetaDrawer:
     def __init__(self, draw_meta: dict):
         self.__draw_meta = draw_meta
 
@@ -63,7 +63,7 @@ class TaiyiMetaDrawer:
         if model_meta.__contains__('type') and model_meta['type'] == 'ckpt':
             # model is a file in safetensors or ckpt
             model_path: str = model_meta['path']
-            drawer = TaiyiDrawer.from_ckpt(model_path, **params)
+            drawer = GathDrawer.from_ckpt(model_path, **params)
         else:
             # model is a dir or a model id str
             if tokenizer is not None:
@@ -72,9 +72,9 @@ class TaiyiMetaDrawer:
                 params['custom_pipeline'] = "lpw_stable_diffusion"
 
             if model_meta.__contains__('path'):
-                drawer = TaiyiDrawer.from_pretrained(model_meta['path'], **params)
+                drawer = GathDrawer.from_pretrained(model_meta['path'], **params)
             else:
-                drawer = TaiyiDrawer.from_pretrained(model_meta['name'], **params)
+                drawer = GathDrawer.from_pretrained(model_meta['name'], **params)
 
         if self.__device is not None:
             drawer.to_device(self.__device)

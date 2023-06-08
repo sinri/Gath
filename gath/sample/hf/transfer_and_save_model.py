@@ -1,4 +1,4 @@
-from taiyi.drawer.LoRAModelMerger import LoRAModelMerger
+from gath.drawer.LoRAModelMerger import LoRAModelMerger
 
 
 def merge_lxq(base_model_dir: str):

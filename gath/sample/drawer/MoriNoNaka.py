@@ -1,10 +1,10 @@
 import time
 
-from taiyi.drawer.TaiyiDrawer import TaiyiDrawer
-from taiyi.sample.drawer.SampleConstant import SampleConstant
+from gath.drawer.GathDrawer import GathDrawer
+from gath.sample.drawer.SampleConstant import SampleConstant
 
 if __name__ == '__main__':
-    d = TaiyiDrawer(SampleConstant.taiyi_model)
+    d = GathDrawer(SampleConstant.taiyi_model)
 
     # 提示词
     prompt = "押沙龙头发缠于树上悬挂起来"

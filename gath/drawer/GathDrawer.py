@@ -7,7 +7,7 @@ from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAnce
 from safetensors.torch import load_file
 
 
-class TaiyiDrawer:
+class GathDrawer:
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path: Optional[Union[str, os.PathLike]], **kwargs):
         """
@@ -17,7 +17,7 @@ class TaiyiDrawer:
         :return:
         """
         x = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path, **kwargs)
-        return TaiyiDrawer(x)
+        return GathDrawer(x)
 
     @classmethod
     def from_ckpt(cls, pretrained_model_link_or_path, **kwargs):
@@ -28,7 +28,7 @@ class TaiyiDrawer:
         :return:
         """
         d = StableDiffusionPipeline.from_ckpt(pretrained_model_link_or_path, **kwargs)
-        return TaiyiDrawer(d)
+        return GathDrawer(d)
 
     def __init__(self, pipeline: StableDiffusionPipeline):
         self.__stable_diffusion = pipeline
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     model_name = 'IDEA-CCNL/Taiyi-Stable-Diffusion-1B-Chinese-v0.1'
     model_dir = "E:\\sinri\\Taiyi-Stable-Diffusion-1B-Chinese-v0.1"
     # Fetched Model Manually Before Running
-    d = TaiyiDrawer(model_dir)
+    d = GathDrawer(model_dir)
     # Download Model Automatically (SLOW)
     # d=TaiyiDrawer(model_name)
 

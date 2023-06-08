@@ -1,4 +1,4 @@
-from taiyi.drawer.TaiyiDrawer import TaiyiDrawer
+from gath.drawer.GathDrawer import GathDrawer
 
 
 class LoRAModelMerger:
@@ -24,7 +24,7 @@ class LoRAModelMerger:
         :param multiplier:
         :return:
         """
-        drawer = TaiyiDrawer.from_pretrained(self.__base_model_dir)
+        drawer = GathDrawer.from_pretrained(self.__base_model_dir)
         drawer.to_device(self.__device)
         drawer.load_lora_weights(lora_model_safetensors_file, multiplier, self.__device)
         drawer.save_model(huggingface_repo_dir)

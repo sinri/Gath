@@ -1,6 +1,6 @@
-# TaiyiDrawer
+# GathDrawer
 
-Taiyi Drawer Related
+Gath Drawer Related
 
 ## Draw
 
@@ -20,7 +20,7 @@ git lfs install
 git clone https://huggingface.co/IDEA-CCNL/Taiyi-Stable-Diffusion-1B-Chinese-v0.1
 ```
 
-Then use [TaiyiDrawer](./taiyi/drawer/TaiyiDrawer.py) to draw.
+Then use [GathDrawer](gath/drawer/GathDrawer.py) to draw.
 It is based on HuggingFace Pipeline.
 See its MAIN for more information.
 
