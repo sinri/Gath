@@ -1,0 +1,35 @@
+generator:
+  framework: torch
+turn_off_nsfw_check: true
+model:
+  name: ljni/stable-diffusion-v1-5-LeXiaoQi
+  path: E:\OneDrive\Leqee\ai\stable-diffusion-v1-5-LeXiaoQi
+tokenizer:
+  name: unknown
+  path: E:\OneDrive\Leqee\ai\stable-diffusion-v1-5-LeXiaoQi\tokenizer
+  max_length: 1024
+# if you need to use Embedding and Hyper Network Trained File
+#textual_inversion:
+#  path: E:\sinri\stable-diffusion-webui\embeddings\Mascot LXQ.pt
+device: cuda
+height: 712
+width: 512
+long_prompt_arg: 2
+# Load extra LoRA weight safetensors
+#lora:
+#  checkpoint_path: E:\sinri\sd-scripts\workspace\lxq2\trained_model\stable-diffusion-v1-5-LeXiaoQi-5-000005.safetensors
+#  multiplier: 1
+prompt: >
+  (a photo of LeXiaoQi),solo,want a lot of money
+negative_prompt: >
+  ((very long hair:1.3)),sketch, duplicate, ugly, 
+  huge eyes, text, logo, monochrome, worst face, (bad and mutated hands:1.3), (worst quality:2.0), (low quality:2.0), 
+  (blurry:2.0), horror, geometry, bad_prompt, (bad hands), (missing fingers), multiple limbs, bad anatomy,
+  (interlocked fingers:1.2), Ugly Fingers, (extra digit and hands and fingers and legs and arms:1.4), crown braid,
+  (bad-artist-anime), bad-artist, bad hand
+steps: 30
+cfg: 9
+scheduler: euler_a
+# 可以指定seed 也可以不指定走随机
+#seed: 3099373267
+

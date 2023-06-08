@@ -9,10 +9,10 @@ from taiyi.drawer.TaiyiMetaDrawer import TaiyiMetaDrawer
 from taiyi.sample.drawer.SampleConstant import SampleConstant
 
 if __name__ == '__main__':
-    with open('meta/LeXiaoQi-0003.yml', 'r', encoding='utf-8') as f:
+    with open('meta/HinatsuruAi-0001.yml', 'r', encoding='utf-8') as f:
         draw_meta = yaml.safe_load(f)
     print(draw_meta)
 
-    filename = SampleConstant.output_dir + f"\\LeXiaoQi-{time.time()}.jpg"
+    filename = SampleConstant.output_dir + f"\\HinatsuruAi-{time.time()}.jpg"
     TaiyiMetaDrawer(draw_meta).draw(filename)
     print(f"saved: {filename}")

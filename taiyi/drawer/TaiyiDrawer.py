@@ -1,5 +1,6 @@
+import os
 from collections import defaultdict
-from typing import Union, List
+from typing import Union, List, Optional
 
 import torch
 from diffusers import StableDiffusionPipeline, AutoencoderKL, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler
@@ -7,25 +8,30 @@ from safetensors.torch import load_file
 
 
 class TaiyiDrawer:
-    def __init__(self, vae: Union[AutoencoderKL, str], **kwargs):
+    @classmethod
+    def from_pretrained(cls, pretrained_model_name_or_path: Optional[Union[str, os.PathLike]], **kwargs):
         """
-        Initialize TaiyiDrawer along with its pipeline.
-        :param vae:  Variational Auto-Encoder (VAE) Model to encode and decode images to and from latent representations.
-        Others in kwargs:
-            text_encoder (CLIPTextModel) — Frozen text-encoder. Stable Diffusion uses the text portion of CLIP, specifically the clip-vit-large-patch14 variant.
-            tokenizer (CLIPTokenizer) — Tokenizer of class CLIPTokenizer.
-            unet (UNet2DConditionModel) — Conditional U-Net architecture to denoise the encoded image latents.
-            scheduler (SchedulerMixin) — A scheduler to be used in combination with unet to denoise the encoded image latents. Can be one of DDIMScheduler, LMSDiscreteScheduler, or PNDMScheduler.
-            safety_checker (StableDiffusionSafetyChecker) — Classification module that estimates whether generated images could be considered offensive or harmful. Please, refer to the model card for details.
-            feature_extractor (CLIPImageProcessor) — Model that extracts features from generated images to be used as inputs for the safety_checker.
+        :see diffusers.pipelines.pipeline_utils.DiffusionPipeline.from_pretrained
+        :param pretrained_model_name_or_path:
+        :param kwargs:
+        :return:
         """
+        x = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path, **kwargs)
+        return TaiyiDrawer(x)
 
-        # if kwargs.__contains__('tokenizer'):
-        # CLIPTokenizer(vae)
+    @classmethod
+    def from_ckpt(cls, pretrained_model_link_or_path, **kwargs):
+        """
+        :see diffusers.loaders.FromCkptMixin.from_ckpt
+        :param pretrained_model_link_or_path:
+        :param kwargs:
+        :return:
+        """
+        d = StableDiffusionPipeline.from_ckpt(pretrained_model_link_or_path, **kwargs)
+        return TaiyiDrawer(d)
 
-        self.__stable_diffusion = StableDiffusionPipeline.from_pretrained(vae, **kwargs)
-
-        # print(self.__stable_diffusion.tokenizer)
+    def __init__(self, pipeline: StableDiffusionPipeline):
+        self.__stable_diffusion = pipeline
 
     def to_device(self, device):
         """
@@ -165,6 +171,9 @@ class TaiyiDrawer:
         """
 
         return self.__stable_diffusion(prompt, **kwargs)
+
+    def save_model(self, save_directory: str):
+        self.__stable_diffusion.save_pretrained(save_directory, True)
 
 
 if __name__ == '__main__':

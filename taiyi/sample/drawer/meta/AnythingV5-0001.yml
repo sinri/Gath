@@ -1,0 +1,31 @@
+generator:
+  framework: torch
+turn_off_nsfw_check: true
+model:
+  type: ckpt
+  path: E:\OneDrive\Leqee\ai\civitai\AnythingV5_v32.safetensors
+#tokenizer:
+#  name: unknown
+#  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5\tokenizer
+#  max_length: 1024
+# if you need to use Embedding and Hyper Network Trained File
+#textual_inversion:
+#  path: E:\sinri\stable-diffusion-webui\embeddings\Mascot LXQ.pt
+device: cuda
+height: 768
+width: 512
+long_prompt_arg: 1
+# Load extra LoRA weight safetensors
+#lora:
+#  checkpoint_path: E:\OneDrive\Leqee\ai\civitai\Ryuuou no Oshigoto!_hinatsuru ai.safetensors
+#  multiplier: 0.7
+prompt: >
+  1girl, (main dress style, white berets), 8k, masterpiece, absurdres, anime, screencap,
+negative_prompt: >
+  autistic eyes, horror eyes, enthusiastic eyes, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, blurry, bad hands, missing fingers, error, cropped, normal quality, fewer digit, owres, extra digit, worst quality, jpeg artifacts, lowres, bad feet, disfigured, missing arms, long neck, ugly, bad proportions, multiple breasts, fused fingers, extra legs, poorly drawn hands, cloned face, malformed hands, mutated hands and fingers, missing limb, malformed mutated, unclear eyes, fused hand, disappearing thigh, disappearing calf, bad asshole, bad pussy, bad body, on hand with less than 5 fingers, crown , stacked torses, stacked hands, totem pole
+steps: 25
+cfg: 7.5
+scheduler: euler_a
+# 可以指定seed 也可以不指定走随机
+#  seed: 0
+

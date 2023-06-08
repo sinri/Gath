@@ -11,6 +11,9 @@ class TaiyiMetaDrawer:
     def __init__(self, draw_meta: dict):
         self.__draw_meta = draw_meta
 
+        self.__prompt: str = self.__draw_meta['prompt']
+        self.__prompt.replace('\n', ' ')
+
         # CLIP length limitation truncate workaround
         self.__long_prompt_arg = 1
         if self.__draw_meta.__contains__('long_prompt_arg'):
@@ -56,15 +59,22 @@ class TaiyiMetaDrawer:
         model_meta = self.__draw_meta['model']
 
         params = {}
-        if tokenizer is not None:
-            params['tokenizer'] = tokenizer
-        if self.__long_prompt_arg > 1:
-            params['custom_pipeline'] = "lpw_stable_diffusion"
 
-        if model_meta.__contains__('path'):
-            drawer = TaiyiDrawer(model_meta['path'], **params)
+        if model_meta.__contains__('type') and model_meta['type'] == 'ckpt':
+            # model is a file in safetensors or ckpt
+            model_path: str = model_meta['path']
+            drawer = TaiyiDrawer.from_ckpt(model_path, **params)
         else:
-            drawer = TaiyiDrawer(model_meta['name'], **params)
+            # model is a dir or a model id str
+            if tokenizer is not None:
+                params['tokenizer'] = tokenizer
+            if self.__long_prompt_arg > 1:
+                params['custom_pipeline'] = "lpw_stable_diffusion"
+
+            if model_meta.__contains__('path'):
+                drawer = TaiyiDrawer.from_pretrained(model_meta['path'], **params)
+            else:
+                drawer = TaiyiDrawer.from_pretrained(model_meta['name'], **params)
 
         if self.__device is not None:
             drawer.to_device(self.__device)
@@ -109,13 +119,18 @@ class TaiyiMetaDrawer:
     def draw(self, output_image_file: Optional[str] = None):
         drawer = self.__generate_drawer()
 
-        params = {
-            'height': self.__draw_meta['height'],
-            'width': self.__draw_meta['width'],
-            'num_inference_steps': self.__draw_meta['steps'],
-            'guidance_scale': self.__draw_meta['cfg'],
-            'negative_prompt': self.__draw_meta['negative_prompt'],
-        }
+        params = {}
+
+        if self.__draw_meta.__contains__('height'):
+            params['height'] = self.__draw_meta['height']
+        if self.__draw_meta.__contains__('width'):
+            params['width'] = self.__draw_meta['width']
+        if self.__draw_meta.__contains__('steps'):
+            params['num_inference_steps'] = self.__draw_meta['steps']
+        if self.__draw_meta.__contains__('cfg'):
+            params['guidance_scale'] = self.__draw_meta['cfg']
+        if self.__draw_meta.__contains__('negative_prompt'):
+            params['negative_prompt'] = self.__draw_meta['negative_prompt'].replace('\n', ' ')
 
         if self.__long_prompt_arg > 1:
             params['max_embeddings_multiples'] = self.__long_prompt_arg
@@ -138,7 +153,7 @@ class TaiyiMetaDrawer:
                 if generator_meta.__contains__('seed'):
                     seed = generator_meta['seed']
                 if seed is None:
-                    seed = random.randint(1, 1024)
+                    seed = random.randint(1, 9223372036854775807)
 
                 generator.manual_seed(seed)
 
@@ -147,7 +162,7 @@ class TaiyiMetaDrawer:
         if self.__draw_meta.__contains__("device"):
             drawer.to_device(self.__draw_meta['device'])
 
-        drawn = drawer.draw(self.__draw_meta['prompt'], **params)
+        drawn = drawer.draw(self.__prompt, **params)
 
         image = drawn.images[0]
         if output_image_file is None:
