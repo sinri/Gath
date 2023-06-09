@@ -4,10 +4,10 @@ turn_off_nsfw_check: true
 model:
   name: ljni/stable-diffusion-v1-5-LeXiaoQi
   path: E:\OneDrive\Leqee\ai\stable-diffusion-v1-5-LeXiaoQi
-tokenizer:
-  name: unknown
-  path: E:\OneDrive\Leqee\ai\stable-diffusion-v1-5-LeXiaoQi\tokenizer
-  max_length: 1024
+  tokenizer:
+    name: unknown
+    path: E:\OneDrive\Leqee\ai\stable-diffusion-v1-5-LeXiaoQi\tokenizer
+    max_length: 1024
 # if you need to use Embedding and Hyper Network Trained File
 #textual_inversion:
 #  path: E:\sinri\stable-diffusion-webui\embeddings\Mascot LXQ.pt

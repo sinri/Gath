@@ -16,13 +16,6 @@ def draw_with_any_meta_sample(meta_file_name: str):
     print(f"saved: {filename}")
 
 
-def draw_with_meta_sample_AnythingV5_0001():
-    draw_with_any_meta_sample('AnythingV5-0001.yml')
-
-
-def draw_with_meta_sample_LeXiaoQi_0003():
-    draw_with_any_meta_sample('LeXiaoQi-0003.yml')
-
-
 if __name__ == '__main__':
-    draw_with_meta_sample_LeXiaoQi_0003()
+    draw_with_any_meta_sample('LeXiaoQi-0003.yml')
+    draw_with_any_meta_sample('AnythingV5-0001.yml')

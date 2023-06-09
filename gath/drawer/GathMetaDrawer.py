@@ -29,10 +29,11 @@ class GathMetaDrawer:
             self.__device = self.__draw_meta['device']
 
     def __generate_tokenizer(self):
-        if not self.__draw_meta.__contains__('tokenizer'):
+        model_meta = self.__draw_meta['model']
+        if not model_meta.__contains__('tokenizer'):
             return None
 
-        tokenizer_meta = self.__draw_meta['tokenizer']
+        tokenizer_meta = model_meta['tokenizer']
         if not isinstance(tokenizer_meta, dict):
             return None
 
