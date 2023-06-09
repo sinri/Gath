@@ -18,6 +18,7 @@ class GathInnTask:
             raise Exception('status is not APPLIED')
 
         meta = self.__build_meta_dict()
+        logger.info('meta built', meta)
 
         output_file = f'{env.inn_output_folder}{os.sep}{self.__row["application_id"]}.jpg'
         drawer = GathMetaDrawer(meta)
@@ -25,6 +26,8 @@ class GathInnTask:
 
         if not os.path.isfile(output_file):
             raise Exception('cannot find output file')
+
+        logger.info(f'drawn and saved to {output_file}')
 
         # send to OSS?
         # First, put them into OneDrive, that is enough
@@ -53,7 +56,7 @@ class GathInnTask:
             meta['long_prompt_arg'] = int((len(meta['prompt']) + 76) / 77)
 
         meta['steps'] = self.__row.get('steps')
-        meta['cfg'] = self.__row.get('cfg')
+        meta['cfg'] = float(self.__row.get('cfg'))
         meta['scheduler'] = self.__row.get('scheduler')
 
         return meta

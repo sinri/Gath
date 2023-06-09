@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 
 from nehushtan.mysql.MySQLAnyTable import MySQLAnyTable
 from nehushtan.mysql.MySQLCondition import MySQLCondition
@@ -60,7 +60,7 @@ class GathDB:
             raise Exception(result.get_error())
         return result.get_fetched_rows_as_tuple()
 
-    def read_one_task_to_execute(self) -> dict:
+    def read_one_task_to_execute(self) -> Optional[dict]:
         result = self.build_inn_application_table() \
             .select_in_table() \
             .add_select_field('*') \
@@ -70,7 +70,11 @@ class GathDB:
             .query_for_result_as_tuple_of_dict()
         if not result.is_queried():
             raise Exception(result.get_error())
-        return result.get_fetched_first_row_as_dict()
+        rows = result.get_fetched_rows_as_tuple()
+        if len(rows)>0:
+            return rows[0]
+        else:
+            return None
 
     def decalre_one_task_start_running(self, application_id):
         result = self.build_inn_application_table() \
