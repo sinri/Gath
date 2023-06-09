@@ -22,7 +22,7 @@ class GathMetaDrawer:
         # whether turn off NSFW check
         self.__turn_off_nsfw_check = False
         if self.__draw_meta.__contains__('turn_off_nsfw_check'):
-            self.__turn_off_nsfw_check = self.__draw_meta['turn_off_nsfw_check']
+            self.__turn_off_nsfw_check = (self.__draw_meta['turn_off_nsfw_check'] == 'true')
 
         self.__device = None
         if self.__draw_meta.__contains__("device"):

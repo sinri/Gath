@@ -162,4 +162,5 @@ cython_debug/
 
 output/
 workspace/
+gath/env.py
 gath/sample/env.py

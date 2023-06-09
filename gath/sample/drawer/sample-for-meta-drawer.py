@@ -2,8 +2,8 @@ import time
 
 import yaml
 
+from gath import env
 from gath.drawer.GathMetaDrawer import GathMetaDrawer
-from gath.sample import env
 
 
 def draw_with_any_meta_sample(meta_file_name: str):

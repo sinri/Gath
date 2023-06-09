@@ -1,9 +1,7 @@
-import os
 import time
-from typing import Optional, Union
 
+from gath import env
 from gath.drawer.GathDrawer import GathDrawer
-from gath.sample import env
 
 
 def draw_sample_0000():
