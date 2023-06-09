@@ -35,10 +35,51 @@ inn_base_meta = {
     # seed
 }
 
+
 inn_model_dict = {
-    'sd_v1_5': {
-        'name': 'runwayml/stable-diffusion-v1-5'
-    }
+    'sd-1.5': {
+        'name': 'runwayml/stable-diffusion-v1-5',
+        'path': 'E:\\sinri\\stable-diffusion-webui\\models\\Stable-diffusion\\stable-diffusion-v1-5',
+        'tokenizer': {
+            'name': 'unknown',
+            'path': 'E:\\sinri\\stable-diffusion-webui\\models\\Stable-diffusion\\stable-diffusion-v1-5\\tokenizer',
+            'max_length': 1024,
+        }
+    },
+    'sd-1.5-LeXiaoQi': {
+        'name': 'ljni/stable-diffusion-v1-5-LeXiaoQi',
+        'path': 'E:\\OneDrive\\Leqee\\ai\\stable-diffusion-v1-5-LeXiaoQi',
+        'tokenizer': {
+            'name': 'unknown',
+            'path': 'E:\\OneDrive\\Leqee\\ai\\stable-diffusion-v1-5-LeXiaoQi\\tokenizer',
+            'max_length': 1024,
+        }
+    },
+    'waifu': {
+        'path': 'E:\\OneDrive\\Leqee\\ai\\waifu-diffusion',
+        'tokenizer': {
+            'path': 'E:\\OneDrive\\Leqee\\ai\\waifu-diffusion\\tokenizer',
+            'max_length': 1024,
+        }
+    },
+    'openjourney': {
+        'path': 'E:\\OneDrive\\Leqee\\ai\\openjourney',
+        'tokenizer': {
+            'path': 'E:\\OneDrive\\Leqee\\ai\\openjourney\\tokenizer',
+            'max_length': 1024,
+        }
+    },
+    'a-certain': {
+        'path': 'E:\\OneDrive\\Leqee\\ai\\ACertainModel',
+        'tokenizer': {
+            'path': 'E:\\OneDrive\\Leqee\\ai\\ACertainModel\\tokenizer',
+            'max_length': 1024,
+        }
+    },
+    'anything-5': {
+        'type': 'ckpt',
+        'path': 'E:\\OneDrive\\Leqee\\ai\\civitai\\AnythingV5_v32.safetensors',
+    },
 }
 inn_textual_inversion_dict = {
 
