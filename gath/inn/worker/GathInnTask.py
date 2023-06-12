@@ -4,6 +4,7 @@ from nehushtan.logger.NehushtanFileLogger import NehushtanFileLogger
 
 from gath import env
 from gath.drawer.GathMetaDrawer import GathMetaDrawer
+from gath.inn.worker.AliyunOSSKit import AliyunOSSKit
 
 
 class GathInnTask:
@@ -29,8 +30,11 @@ class GathInnTask:
 
         logger.info(f'drawn and saved to {output_file}')
 
-        # send to OSS?
-        # First, put them into OneDrive, that is enough
+        # send to OSS
+        AliyunOSSKit().upload_local_file(
+            local_path=output_file,
+            oss_path=f'/gath/inn/{self.__row["application_id"]}.jpg'
+        )
 
     def __build_meta_dict(self) -> dict:
         # shallow copy is enough for

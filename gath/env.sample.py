@@ -86,3 +86,8 @@ inn_textual_inversion_dict = {
 }
 
 inn_output_folder = ''
+
+inn_oss_ak_id = ''
+inn_oss_ak_secret = ''
+inn_oss_bucket = ''
+inn_oss_endpoint = 'https://oss-cn-hangzhou.aliyuncs.com'

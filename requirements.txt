@@ -11,3 +11,4 @@ ldm
 
 nehushtan==0.4.29
 pymysql
+oss2
