@@ -25,6 +25,8 @@ class AliyunOSSKit:
             bucket = env.inn_oss_bucket
         if endpoint is None:
             endpoint = env.inn_oss_endpoint
+
+        print(f'upload {local_path} to endpoint {endpoint} bucket {bucket} :: {oss_path}')
         bucket = oss2.Bucket(self.__auth, endpoint, bucket)
 
         return bucket.put_object_from_file(oss_path, local_path)

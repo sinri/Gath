@@ -33,7 +33,7 @@ class GathInnTask:
         # send to OSS
         AliyunOSSKit().upload_local_file(
             local_path=output_file,
-            oss_path=f'/gath/inn/{self.__row["application_id"]}.jpg'
+            oss_path=f'gath/inn/{self.__row["application_id"]}.jpg'
         )
 
     def __build_meta_dict(self) -> dict:
