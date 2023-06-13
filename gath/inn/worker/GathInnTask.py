@@ -49,6 +49,14 @@ class GathInnTask:
         if textual_inversion_part is not None:
             meta['textual_inversion'] = env.inn_textual_inversion_dict.get(textual_inversion_part)
 
+        lora = self.__row.get('lora')
+        lora_multiplier = self.__row.get('lora_multiplier')
+        if lora is not None:
+            meta['lora'] = {
+                'checkpoint_path': env.inn_lora_dict.get(lora),
+                'multiplier': lora_multiplier,
+            }
+
         meta['height'] = self.__row.get('height')
         meta['width'] = self.__row.get('width')
 

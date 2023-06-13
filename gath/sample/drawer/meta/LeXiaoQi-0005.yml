@@ -1,0 +1,29 @@
+generator:
+  framework: torch
+turn_off_nsfw_check: true
+model:
+  path: E:\OneDrive\Leqee\ai\AnythingV5
+  tokenizer:
+    path: E:\OneDrive\Leqee\ai\AnythingV5\tokenizer
+    max_length: 1024
+# if you need to use Embedding and Hyper Network Trained File
+#textual_inversion:
+#  path: E:\sinri\stable-diffusion-webui\embeddings\Mascot LXQ.pt
+device: cuda
+height: 768
+width: 512
+long_prompt_arg: 1
+# Load extra LoRA weight safetensors
+lora:
+  checkpoint_path: E:\sinri\sd-scripts\workspace\lxq3\trained_model\anything-v5-LeXiaoQi-lora-1.safetensors
+  multiplier: 0.6
+prompt: >
+  a LeXiaoQi and a cat
+negative_prompt: >
+  lowres, bad anatomy, deformed, malformed limbs, blurry, mutated hands, blurry,
+steps: 40
+cfg: 10
+scheduler: euler_a
+# 可以指定seed 也可以不指定走随机
+#  seed: 0
+

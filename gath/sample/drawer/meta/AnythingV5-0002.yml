@@ -2,14 +2,11 @@ generator:
   framework: torch
 turn_off_nsfw_check: true
 model:
-  type: ckpt
-  # path: E:\OneDrive\Leqee\ai\civitai\AnythingV5_v32.safetensors
-  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\anything-v5-0.7.safetensors
-  # path: E:\OneDrive\Leqee\ai\AnythingV5
-#tokenizer:
-#  name: unknown
-#  path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5\tokenizer
-#  max_length: 1024
+  path: E:\OneDrive\Leqee\ai\AnythingV5
+  tokenizer:
+    name: unknown
+    path: E:\sinri\stable-diffusion-webui\models\Stable-diffusion\stable-diffusion-v1-5\tokenizer
+    max_length: 1024
 # if you need to use Embedding and Hyper Network Trained File
 #textual_inversion:
 #  path: E:\sinri\stable-diffusion-webui\embeddings\Mascot LXQ.pt

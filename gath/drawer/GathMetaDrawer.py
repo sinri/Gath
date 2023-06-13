@@ -88,9 +88,9 @@ class GathMetaDrawer:
         if self.__draw_meta.__contains__('lora'):
             lora_meta = self.__draw_meta['lora']
             checkpoint_path = lora_meta['checkpoint_path']
-            multiplier = 1
+            multiplier = 1.0
             if lora_meta.__contains__('multiplier'):
-                multiplier = lora_meta['multiplier']
+                multiplier = float(lora_meta['multiplier'])
             drawer.load_lora_weights(checkpoint_path, multiplier, self.__device)
 
         if self.__draw_meta.__contains__('textual_inversion'):

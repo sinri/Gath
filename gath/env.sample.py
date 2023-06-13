@@ -35,7 +35,6 @@ inn_base_meta = {
     # seed
 }
 
-
 inn_model_dict = {
     'sd-1.5': {
         'name': 'runwayml/stable-diffusion-v1-5',
@@ -82,7 +81,12 @@ inn_model_dict = {
     },
 }
 inn_textual_inversion_dict = {
+    'ng_deepnegative_v1_75t':'E:\OneDrive\Leqee\ai\civitai\DeepNegative\ng_deepnegative_v1_75t.pt'
+}
 
+inn_lora_dict = {
+    'anything-v5-LeXiaoQi-lora-1': 'anything-v5-LeXiaoQi-lora-1.safetensors',
+    'SteampunkSchematics': 'SteampunkSchematics',
 }
 
 inn_output_folder = ''
