@@ -85,8 +85,14 @@ inn_textual_inversion_dict = {
 }
 
 inn_lora_dict = {
-    'anything-v5-LeXiaoQi-lora-1': 'anything-v5-LeXiaoQi-lora-1.safetensors',
-    'SteampunkSchematics': 'SteampunkSchematics',
+    'anything-v5-LeXiaoQi-lora-1': {
+        'path': 'anything-v5-LeXiaoQi-lora-1.safetensors',
+        'dtype': 'fp16',
+    },
+    'SteampunkSchematics': {
+        'path': 'SteampunkSchematicsv2-000009.safetensors',
+        'dtype': 'fp16',
+    }
 }
 
 inn_output_folder = ''
