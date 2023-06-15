@@ -81,7 +81,7 @@ inn_model_dict = {
     },
 }
 inn_textual_inversion_dict = {
-    'ng_deepnegative_v1_75t':'E:\OneDrive\Leqee\ai\civitai\DeepNegative\ng_deepnegative_v1_75t.pt'
+    'ng_deepnegative_v1_75t':'ng_deepnegative_v1_75t.pt'
 }
 
 inn_lora_dict = {

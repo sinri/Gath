@@ -16,12 +16,13 @@ long_prompt_arg: 1
 # Load extra LoRA weight safetensors
 lora:
   checkpoint_path: E:\sinri\sd-scripts\workspace\lxq3\trained_model\anything-v5-LeXiaoQi-lora-1.safetensors
-  multiplier: 0.6
+  multiplier: 1.0
+  dtype: fp16
 prompt: >
-  a LeXiaoQi and a cat
+  masterpiece, a LeXiaoQi, moon, grass, hill
 negative_prompt: >
   lowres, bad anatomy, deformed, malformed limbs, blurry, mutated hands, blurry,
-steps: 40
+steps: 20
 cfg: 10
 scheduler: euler_a
 # 可以指定seed 也可以不指定走随机

@@ -53,8 +53,9 @@ class GathInnTask:
         lora_multiplier = self.__row.get('lora_multiplier')
         if lora is not None:
             meta['lora'] = {
-                'checkpoint_path': env.inn_lora_dict.get(lora),
+                'checkpoint_path': env.inn_lora_dict.get(lora).get('path'),
                 'multiplier': lora_multiplier,
+                'dtype':env.inn_lora_dict.get(lora).get('dtype')
             }
 
         meta['height'] = self.__row.get('height')

@@ -91,7 +91,16 @@ class GathMetaDrawer:
             multiplier = 1.0
             if lora_meta.__contains__('multiplier'):
                 multiplier = float(lora_meta['multiplier'])
-            drawer.load_lora_weights(checkpoint_path, multiplier, self.__device)
+
+            lora_dtype = torch.float32
+            if lora_meta.__contains__('dtype'):
+                if lora_meta['dtype'] == 'fp16':
+                    lora_dtype = torch.float16
+                elif lora_meta['dtype'] == 'bf16':
+                    lora_dtype = torch.bfloat16
+                else:
+                    lora_dtype = torch.float32
+            drawer.load_lora_weights(checkpoint_path, multiplier, self.__device, lora_dtype)
 
         if self.__draw_meta.__contains__('textual_inversion'):
             textual_inversion = self.__draw_meta['textual_inversion']

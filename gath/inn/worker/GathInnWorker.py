@@ -1,3 +1,4 @@
+import time
 from typing import Optional
 
 from nehushtan.logger.NehushtanFileLogger import NehushtanFileLogger
@@ -33,6 +34,8 @@ class GathInnWorker:
                         self.__db.declare_one_task_failed(task.get_application_id(), f'{e1}')
             except Exception as e2:
                 self.__logger.exception(f'fetch task failed', e2)
+            finally:
+                time.sleep(5.0)
 
 
 if __name__ == '__main__':

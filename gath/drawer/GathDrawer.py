@@ -53,7 +53,7 @@ class GathDrawer:
         print(f'Loaded Textual Inversion (Embedding): {pretrained_model_name_or_path}')
         return self
 
-    def load_lora_weights(self, checkpoint_path, multiplier, device):
+    def load_lora_weights(self, checkpoint_path, multiplier, device, dtype):
         LORA_PREFIX_UNET = "lora_unet"
         LORA_PREFIX_TEXT_ENCODER = "lora_te"
         # load LoRA weight from .safetensors
@@ -93,8 +93,8 @@ class GathDrawer:
                         temp_name = layer_infos.pop(0)
 
             # get elements for this layer
-            weight_up = elems['lora_up.weight'].to(device)
-            weight_down = elems['lora_down.weight'].to(device)
+            weight_up = elems['lora_up.weight'].to(dtype)
+            weight_down = elems['lora_down.weight'].to(dtype)
             alpha = elems['alpha']
             if alpha:
                 alpha = alpha.item() / weight_up.shape[1]
