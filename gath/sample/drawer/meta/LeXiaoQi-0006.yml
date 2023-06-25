@@ -1,0 +1,32 @@
+generator:
+  framework: torch
+turn_off_nsfw_check: true
+model:
+  path: E:\OneDrive\Leqee\ai\DisneyPixarCartoon
+  tokenizer:
+    path: E:\OneDrive\Leqee\ai\DisneyPixarCartoon\tokenizer
+    max_length: 1024
+# if you need to use Embedding and Hyper Network Trained File
+#textual_inversion:
+#  -
+#    path: E:\sinri\stable-diffusion-webui\embeddings\Mascot LXQ.pt
+device: cuda
+height: 512
+width: 768
+long_prompt_arg: 1
+# Load extra LoRA weight safetensors
+lora:
+  -
+    checkpoint_path: E:\sinri\sd-scripts\workspace\lxq5\trained_model\DisneyPixarCartoon-LeXiaoQi-5-lora-1.safetensors
+    multiplier: 0.7
+    dtype: fp16
+prompt: >
+  masterpiece, a LeXiaoQi cat robot,
+negative_prompt: >
+  EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry
+steps: 20
+cfg: 10
+scheduler: euler_a
+# 可以指定seed 也可以不指定走随机
+#  seed: 0
+

@@ -16,6 +16,12 @@ class GathDB:
     def build_inn_application_table(self):
         return InnApplicationTable(self.__db, 'inn_application')
 
+    def build_inn_application_lora_table(self):
+        return InnApplicationTable(self.__db, 'inn_application_lora')
+
+    def build_inn_application_textual_inversion_table(self):
+        return InnApplicationTable(self.__db, 'inn_application_textual_inversion')
+
     def register_one_task(self, row: dict):
         """
         row contains
@@ -71,12 +77,26 @@ class GathDB:
         if not result.is_queried():
             raise Exception(result.get_error())
         rows = result.get_fetched_rows_as_tuple()
-        if len(rows)>0:
-            return rows[0]
+        if len(rows) > 0:
+            row = rows[0]
+
+            row['lora_rows'] = self.build_inn_application_lora_table() \
+                .select_in_table() \
+                .add_select_field("*") \
+                .add_condition(MySQLCondition.make_equal('application_id', row['application_id'])) \
+                .query_for_result_as_tuple_of_dict()\
+                .get_fetched_rows_as_tuple()
+            row['textual_inversion_rows'] = self.build_inn_application_textual_inversion_table() \
+                .select_in_table() \
+                .add_select_field("*") \
+                .add_condition(MySQLCondition.make_equal('application_id', row['application_id'])) \
+                .query_for_result_as_tuple_of_dict()\
+                .get_fetched_rows_as_tuple()
+            return row
         else:
             return None
 
-    def decalre_one_task_start_running(self, application_id):
+    def declare_one_task_start_running(self, application_id):
         result = self.build_inn_application_table() \
             .update_rows(
             [

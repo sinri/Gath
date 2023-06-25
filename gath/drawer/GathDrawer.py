@@ -4,7 +4,8 @@ from typing import Union, List, Optional
 
 import torch
 from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler, \
-    DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler
+    DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler, AutoencoderKL, \
+    StableDiffusionLatentUpscalePipeline
 from safetensors.torch import load_file
 
 
@@ -34,6 +35,7 @@ class GathDrawer:
 
     def __init__(self, pipeline: StableDiffusionPipeline):
         self.__stable_diffusion = pipeline
+        self.__upscaler = None
 
     def to_device(self, device):
         """
@@ -161,6 +163,10 @@ class GathDrawer:
     def change_scheduler_to_pndm(self):
         return self.change_scheduler(PNDMScheduler.from_config(self.__stable_diffusion.scheduler.config))
 
+    def set_upscaler(self, upscaler: StableDiffusionLatentUpscalePipeline):
+        self.__upscaler = upscaler
+        return self
+
     def draw(self, prompt: Union[str, List[str]], **kwargs):
         """
         Draw an image
@@ -185,7 +191,33 @@ class GathDrawer:
         :return:
         """
 
-        return self.__stable_diffusion(prompt, **kwargs)
+        if self.__upscaler is not None:
+            print('upscaler is ready')
+
+            kwargs['output_type'] = "latent"
+            drawn = self.__stable_diffusion(prompt, **kwargs)
+            low_res_latents = drawn.images
+
+            return self.__upscale(prompt, low_res_latents, 20, 0, kwargs['generator'])
+
+            # return self.__upscaler(
+            #     prompt=prompt,
+            #     image=low_res_latents,
+            #     num_inference_steps=20,
+            #     guidance_scale=0,
+            #     generator=kwargs['generator'],
+            # )
+        else:
+            return self.__stable_diffusion(prompt, **kwargs)
+
+    def __upscale(self, prompt, low_res_latents, steps, guidance_scale, generator):
+        return self.__upscaler(
+            prompt=prompt,
+            image=low_res_latents,
+            num_inference_steps=steps,
+            guidance_scale=guidance_scale,
+            generator=generator,
+        )
 
     def save_model(self, save_directory: str):
         self.__stable_diffusion.save_pretrained(save_directory, True)

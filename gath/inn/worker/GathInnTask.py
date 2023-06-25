@@ -45,18 +45,24 @@ class GathInnTask:
             raise Exception('model is not available')
         meta['model'] = model_part
 
-        textual_inversion_part = self.__row.get('textual_inversion')
-        if textual_inversion_part is not None:
-            meta['textual_inversion'] = env.inn_textual_inversion_dict.get(textual_inversion_part)
+        textual_inversion_rows = self.__row.get('textual_inversion_rows')
+        if textual_inversion_rows is not None and len(textual_inversion_rows) > 0:
+            meta['textual_inversion'] = []
+            for textual_inversion_row in textual_inversion_rows:
+                meta['textual_inversion'].append(
+                    env.inn_textual_inversion_dict.get(textual_inversion_row['textual_inversion'])
+                )
 
-        lora = self.__row.get('lora')
-        lora_multiplier = self.__row.get('lora_multiplier')
-        if lora is not None:
-            meta['lora'] = {
-                'checkpoint_path': env.inn_lora_dict.get(lora).get('path'),
-                'multiplier': lora_multiplier,
-                'dtype':env.inn_lora_dict.get(lora).get('dtype')
-            }
+        lora_rows = self.__row.get('lora_rows')
+        for lora_row in lora_rows:
+            lora = lora_row['lora']
+            lora_multiplier = lora_row['lora_multiplier']
+            if lora is not None:
+                meta['lora'] = {
+                    'checkpoint_path': env.inn_lora_dict.get(lora).get('path'),
+                    'multiplier': lora_multiplier,
+                    'dtype': env.inn_lora_dict.get(lora).get('dtype')
+                }
 
         meta['height'] = self.__row.get('height')
         meta['width'] = self.__row.get('width')

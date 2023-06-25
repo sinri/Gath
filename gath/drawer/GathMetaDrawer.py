@@ -2,6 +2,7 @@ import random
 from typing import Optional
 
 import torch
+from diffusers import AutoencoderKL, StableDiffusionLatentUpscalePipeline
 from transformers import CLIPTokenizer
 
 from gath.drawer.GathDrawer import GathDrawer
@@ -27,6 +28,8 @@ class GathMetaDrawer:
         self.__device = None
         if self.__draw_meta.__contains__("device"):
             self.__device = self.__draw_meta['device']
+
+        self.__upscaler_meta = None
 
     def __generate_tokenizer(self):
         model_meta = self.__draw_meta['model']
@@ -59,6 +62,9 @@ class GathMetaDrawer:
 
         model_meta = self.__draw_meta['model']
 
+        if model_meta.__contains__('upscaler'):
+            self.__upscaler_meta = model_meta['upscaler']
+
         params = {}
 
         if model_meta.__contains__('type') and model_meta['type'] == 'ckpt':
@@ -71,6 +77,11 @@ class GathMetaDrawer:
                 params['tokenizer'] = tokenizer
             if self.__long_prompt_arg > 1:
                 params['custom_pipeline'] = "lpw_stable_diffusion"
+
+            # vae
+            if model_meta.__contains__('vae') and isinstance(model_meta['vae'], dict):
+                vae_value = model_meta['vae'].get('path')
+                params['vae'] = AutoencoderKL.from_pretrained(vae_value)
 
             if model_meta.__contains__('path'):
                 drawer = GathDrawer.from_pretrained(model_meta['path'], **params)
@@ -86,31 +97,44 @@ class GathMetaDrawer:
         self.__decide_scheduler(drawer)
 
         if self.__draw_meta.__contains__('lora'):
-            lora_meta = self.__draw_meta['lora']
-            checkpoint_path = lora_meta['checkpoint_path']
-            multiplier = 1.0
-            if lora_meta.__contains__('multiplier'):
-                multiplier = float(lora_meta['multiplier'])
 
-            lora_dtype = torch.float32
-            if lora_meta.__contains__('dtype'):
-                if lora_meta['dtype'] == 'fp16':
-                    lora_dtype = torch.float16
-                elif lora_meta['dtype'] == 'bf16':
-                    lora_dtype = torch.bfloat16
-                else:
-                    lora_dtype = torch.float32
-            drawer.load_lora_weights(checkpoint_path, multiplier, self.__device, lora_dtype)
+            if isinstance(self.__draw_meta['lora'], dict):
+                # legacy as a single dict
+                lora_meta_list = [self.__draw_meta['lora']]
+            else:
+                # newer: as list of dict
+                lora_meta_list = self.__draw_meta['lora']
+
+            for lora_meta in lora_meta_list:
+                checkpoint_path = lora_meta['checkpoint_path']
+                multiplier = 1.0
+                if lora_meta.__contains__('multiplier'):
+                    multiplier = float(lora_meta['multiplier'])
+
+                lora_dtype = torch.float32
+                if lora_meta.__contains__('dtype'):
+                    if lora_meta['dtype'] == 'fp16':
+                        lora_dtype = torch.float16
+                    elif lora_meta['dtype'] == 'bf16':
+                        lora_dtype = torch.bfloat16
+                    else:
+                        lora_dtype = torch.float32
+                drawer.load_lora_weights(checkpoint_path, multiplier, self.__device, lora_dtype)
 
         if self.__draw_meta.__contains__('textual_inversion'):
-            textual_inversion = self.__draw_meta['textual_inversion']
-            if not isinstance(textual_inversion, dict):
-                raise RuntimeError()
-            if textual_inversion.__contains__('name'):
-                textual_inversion_v = textual_inversion['name']
+            if isinstance(self.__draw_meta['textual_inversion'], dict):
+                textual_inversion_list = [self.__draw_meta['textual_inversion'], ]
             else:
-                textual_inversion_v = textual_inversion['path']
-            drawer.load_textual_inversion(textual_inversion_v)
+                textual_inversion_list = self.__draw_meta['textual_inversion']
+
+            for textual_inversion in textual_inversion_list:
+                if not isinstance(textual_inversion, dict):
+                    raise RuntimeError()
+                if textual_inversion.__contains__('name'):
+                    textual_inversion_v = textual_inversion['name']
+                else:
+                    textual_inversion_v = textual_inversion['path']
+                drawer.load_textual_inversion(textual_inversion_v)
 
         return drawer
 
@@ -176,6 +200,24 @@ class GathMetaDrawer:
                 generator.manual_seed(seed)
 
                 params['generator'] = generator
+
+        if self.__upscaler_meta is not None:
+            upscaler_dtype = torch.float16
+            if self.__upscaler_meta.__contains__('dtype'):
+                if self.__upscaler_meta['dtype'] == 'fp16':
+                    upscaler_dtype = torch.float16
+                elif self.__upscaler_meta['dtype'] == 'bf16':
+                    upscaler_dtype = torch.bfloat16
+                else:
+                    upscaler_dtype = torch.float32
+
+            upscaler = StableDiffusionLatentUpscalePipeline.from_pretrained(
+                self.__upscaler_meta['model'],
+                torch_dtype=upscaler_dtype
+            )
+            if self.__draw_meta.__contains__("device"):
+                upscaler.to(self.__draw_meta['device'])
+            drawer.set_upscaler(upscaler)
 
         if self.__draw_meta.__contains__("device"):
             drawer.to_device(self.__draw_meta['device'])

@@ -26,15 +26,16 @@ class GathInnWorker:
                 if task is not None:
                     self.__logger.info(f'Fetched task to do: {task.get_application_id()}')
                     try:
-                        self.__db.decalre_one_task_start_running(task.get_application_id())
+                        self.__db.declare_one_task_start_running(task.get_application_id())
                         task.execute(self.__logger)
                         self.__db.declare_one_task_done(task.get_application_id())
                     except Exception as e1:
                         self.__logger.exception(f'task {task.get_application_id()} error', e1)
                         self.__db.declare_one_task_failed(task.get_application_id(), f'{e1}')
+                else:
+                    time.sleep(5.0)
             except Exception as e2:
                 self.__logger.exception(f'fetch task failed', e2)
-            finally:
                 time.sleep(5.0)
 
 
