@@ -2,9 +2,9 @@ from diffusers import StableDiffusionPipeline
 
 
 class GathCheckpointMerger:
-    '''
+    """
     CIVITAI 有很多奇奇怪怪的ckpt，只要网络好，就可以还原回repo，妙极了
-    '''
+    """
 
     def __init__(self, pretrained_model_link_or_path, **kwargs):
         self.__stable_diffusion = StableDiffusionPipeline.from_ckpt(pretrained_model_link_or_path, **kwargs)
@@ -21,8 +21,14 @@ if __name__ == '__main__':
     # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ICBINP\\icbinpICantBelieveIts_final.safetensors'
     # repo_path = 'E:\\OneDrive\\Leqee\\ai\\ICBINP'
 
-    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\DisneyPixarCartoon\\disneyPixarCartoon_v10.safetensors'
-    repo_path = 'E:\\OneDrive\\Leqee\\ai\\DisneyPixarCartoon'
+    # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\DisneyPixarCartoon\\disneyPixarCartoon_v10.safetensors'
+    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\DisneyPixarCartoon'
+
+    # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\NightSkyYozoraStyleModel\\nightSkyYOZORAStyle_yozoraV1PurnedFp16.safetensors'
+    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\NightSkyYozoraStyleModel'
+
+    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_MeinaUnreal\\meinaunreal_v3.safetensors'
+    repo_path = 'E:\\OneDrive\\Leqee\\ai\\repo\\MeinaUnreal'
 
     x = GathCheckpointMerger(ckpt_path)
     x.save_model(repo_path)

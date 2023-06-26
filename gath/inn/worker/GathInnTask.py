@@ -36,6 +36,9 @@ class GathInnTask:
             oss_path=f'gath/inn/{self.__row["application_id"]}.jpg'
         )
 
+        # remove
+        os.remove(output_file)
+
     def __build_meta_dict(self) -> dict:
         # shallow copy is enough for
         meta = env.inn_base_meta.copy()

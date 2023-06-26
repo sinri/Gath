@@ -35,7 +35,7 @@ class GathDrawer:
 
     def __init__(self, pipeline: StableDiffusionPipeline):
         self.__stable_diffusion = pipeline
-        self.__upscaler = None
+        self.__upscaler: Optional[StableDiffusionLatentUpscalePipeline] = None
 
     def to_device(self, device):
         """
@@ -192,21 +192,22 @@ class GathDrawer:
         """
 
         if self.__upscaler is not None:
-            print('upscaler is ready')
+            # print('upscaler is ready')
 
             kwargs['output_type'] = "latent"
-            drawn = self.__stable_diffusion(prompt, **kwargs)
-            low_res_latents = drawn.images
+            low_res_latents = self.__stable_diffusion(prompt, **kwargs).images
 
-            return self.__upscale(prompt, low_res_latents, 20, 0, kwargs['generator'])
+            # print(type(low_res_latents))
 
-            # return self.__upscaler(
-            #     prompt=prompt,
-            #     image=low_res_latents,
-            #     num_inference_steps=20,
-            #     guidance_scale=0,
-            #     generator=kwargs['generator'],
-            # )
+            # return self.__upscale(prompt, low_res_latents, 20, 0, kwargs['generator'])
+
+            return self.__upscaler(
+                prompt=prompt,
+                image=low_res_latents,
+                num_inference_steps=20,
+                guidance_scale=0,
+                generator=kwargs['generator'],
+            )
         else:
             return self.__stable_diffusion(prompt, **kwargs)
 

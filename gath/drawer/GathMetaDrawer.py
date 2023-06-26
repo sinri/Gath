@@ -195,7 +195,8 @@ class GathMetaDrawer:
                 if generator_meta.__contains__('seed'):
                     seed = generator_meta['seed']
                 if seed is None:
-                    seed = random.randint(1, 9223372036854775807)
+                    # seed = random.randint(1, 9223372036854775807)
+                    seed = random.randint(1, 9999999999)
 
                 generator.manual_seed(seed)
 
@@ -210,6 +211,8 @@ class GathMetaDrawer:
                     upscaler_dtype = torch.bfloat16
                 else:
                     upscaler_dtype = torch.float32
+
+            print(f'to build upscaler: {self.__upscaler_meta["model"]}, {upscaler_dtype}')
 
             upscaler = StableDiffusionLatentUpscalePipeline.from_pretrained(
                 self.__upscaler_meta['model'],

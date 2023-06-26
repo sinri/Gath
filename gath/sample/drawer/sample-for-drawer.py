@@ -114,7 +114,6 @@ def draw_with_model_and_vae():
     image.save(filename)
     print(f"saved: {filename}")
 
-
 if __name__ == '__main__':
     # draw_with_model()
     # draw_with_ckpt()

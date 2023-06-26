@@ -2,12 +2,12 @@ generator:
   framework: torch
 turn_off_nsfw_check: true
 model:
-  path: E:\OneDrive\Leqee\ai\DisneyPixarCartoon
+  path: E:\OneDrive\Leqee\ai\repo\DisneyPixarCartoon
   tokenizer:
-    path: E:\OneDrive\Leqee\ai\DisneyPixarCartoon\tokenizer
+    path: E:\OneDrive\Leqee\ai\repo\DisneyPixarCartoon\tokenizer
     max_length: 1024
-  vae:
-    path: E:\OneDrive\Leqee\ai\civitai\vae_yozora_diffuser
+#  vae:
+#    path: E:\OneDrive\Leqee\ai\civitai\vae_yozora_diffuser
   upscaler:
     model: stabilityai/sd-x2-latent-upscaler
 # if you need to use Embedding and Hyper Network Trained File
@@ -21,11 +21,11 @@ long_prompt_arg: 1
 # Load extra LoRA weight safetensors
 lora:
   -
-    checkpoint_path: E:\sinri\sd-scripts\workspace\lxq6\trained_model\DisneyPixarCartoon-LeXiaoQi-6-lora-1.safetensors
+    checkpoint_path: E:\sinri\sd-scripts\workspace\lxq6\trained_model\DisneyPixarCartoon-LeXiaoQi-6-lora-2-000010.safetensors
     multiplier: 0.7
     dtype: fp16
 prompt: >
-  masterpiece, a LeXiaoQi doll, flower
+  masterpiece, a LeXiaoQi, flower
 negative_prompt: >
   EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry
 steps: 20

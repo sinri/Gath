@@ -1,0 +1,1 @@
+python ./convert_original_stable_diffusion_to_diffusers.py --checkpoint_path xxx.ckpt  --dump_path save_dir --to_safetensors

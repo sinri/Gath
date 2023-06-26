@@ -1,4 +1,3 @@
-
 import io
 
 import requests
@@ -146,7 +145,7 @@ class GathVaeConverter:
 
         vae = AutoencoderKL(**vae_config)
         vae.load_state_dict(converted_vae_checkpoint)
-        vae.save_pretrained(output_path)
+        vae.save_pretrained(output_path, safe_serialization=True)
 
 
 if __name__ == "__main__":
@@ -157,8 +156,8 @@ if __name__ == "__main__":
     #
     # args = parser.parse_args()
 
-    vae_pt_path='E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora\\YOZORA.vae.pt'
-    dump_path='E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora_diffuser'
+    vae_pt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora\\YOZORA.vae.pt'
+    dump_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora_diffuser'
 
-    c=GathVaeConverter()
+    c = GathVaeConverter()
     c.vae_pt_to_vae_diffuser(vae_pt_path, dump_path)

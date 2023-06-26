@@ -1,4 +1,4 @@
-from gath.drawer.LoRAModelMerger import LoRAModelMerger
+from gath.kit.LoRAModelMerger import LoRAModelMerger
 
 
 def merge_lxq(base_model_dir: str):
