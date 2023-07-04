@@ -25,7 +25,7 @@ lora:
     multiplier: 0.7
     dtype: fp16
 prompt: >
-  masterpiece, a LeXiaoQi, flower
+  masterpiece, a LeXiaoQi,space, galaxy,jupyter,moon
 negative_prompt: >
   EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry
 steps: 20

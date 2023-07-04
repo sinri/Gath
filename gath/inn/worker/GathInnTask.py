@@ -1,5 +1,6 @@
 import os
 
+import requests
 from nehushtan.logger.NehushtanFileLogger import NehushtanFileLogger
 
 from gath import env
@@ -30,11 +31,12 @@ class GathInnTask:
 
         logger.info(f'drawn and saved to {output_file}')
 
-        # send to OSS
-        AliyunOSSKit().upload_local_file(
-            local_path=output_file,
-            oss_path=f'gath/inn/{self.__row["application_id"]}.jpg'
-        )
+        with open(output_file, 'rb') as file_to_upload:
+            files = {'file':file_to_upload}
+            values = env.inn_gibeah_verification
+
+            r = requests.post(env.inn_gibeah_upload_url, files=files, data=values)
+            print(f'uploaded: {r.status_code} | {r.text}')
 
         # remove
         os.remove(output_file)

@@ -12,3 +12,8 @@ ldm
 nehushtan==0.4.29
 pymysql
 oss2
+
+# controlnet
+opencv-contrib-python
+controlnet_aux
+mediapipe

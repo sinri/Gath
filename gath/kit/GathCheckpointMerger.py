@@ -27,8 +27,8 @@ if __name__ == '__main__':
     # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\NightSkyYozoraStyleModel\\nightSkyYOZORAStyle_yozoraV1PurnedFp16.safetensors'
     # repo_path = 'E:\\OneDrive\\Leqee\\ai\\NightSkyYozoraStyleModel'
 
-    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_MeinaUnreal\\meinaunreal_v3.safetensors'
-    repo_path = 'E:\\OneDrive\\Leqee\\ai\\repo\\MeinaUnreal'
+    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_RealDosMix\\realdosmix_.safetensors'
+    repo_path = 'E:\\OneDrive\\Leqee\\ai\\repo\\RealDosMix'
 
     x = GathCheckpointMerger(ckpt_path)
     x.save_model(repo_path)

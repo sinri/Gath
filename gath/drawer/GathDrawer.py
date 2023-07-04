@@ -5,7 +5,7 @@ from typing import Union, List, Optional
 import torch
 from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler, \
     DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler, AutoencoderKL, \
-    StableDiffusionLatentUpscalePipeline
+    StableDiffusionLatentUpscalePipeline, UniPCMultistepScheduler
 from safetensors.torch import load_file
 
 
@@ -162,6 +162,9 @@ class GathDrawer:
 
     def change_scheduler_to_pndm(self):
         return self.change_scheduler(PNDMScheduler.from_config(self.__stable_diffusion.scheduler.config))
+
+    def change_scheduler_to_uni_pc_multistep(self):
+        return self.change_scheduler(UniPCMultistepScheduler.from_config(self.__stable_diffusion.scheduler.config))
 
     def set_upscaler(self, upscaler: StableDiffusionLatentUpscalePipeline):
         self.__upscaler = upscaler

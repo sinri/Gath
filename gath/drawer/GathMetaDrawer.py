@@ -153,6 +153,8 @@ class GathMetaDrawer:
             drawer.change_scheduler_to_dpm_solver_multistep()
         elif scheduler == 'lms':
             drawer.change_scheduler_to_lms_discrete()
+        elif scheduler == 'uni_pc_m':
+            drawer.change_scheduler_to_uni_pc_multistep()
         elif scheduler is None or scheduler == '':
             print("USE DEFAULT SCHEDULER")
         else:
