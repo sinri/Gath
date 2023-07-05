@@ -34,7 +34,7 @@ class GathDrawer:
         return GathDrawer(d)
 
     def __init__(self, pipeline: StableDiffusionPipeline):
-        self.__stable_diffusion = pipeline
+        self.__pipeline=pipeline
         self.__upscaler: Optional[StableDiffusionLatentUpscalePipeline] = None
 
     def to_device(self, device):
@@ -43,7 +43,7 @@ class GathDrawer:
         :param device: such as `cuda`
         :return:
         """
-        self.__stable_diffusion = self.__stable_diffusion.to(device)
+        self.__pipeline = self.__pipeline.to(device)
         return self
 
     def load_textual_inversion(self, pretrained_model_name_or_path):
@@ -51,7 +51,7 @@ class GathDrawer:
         :param pretrained_model_name_or_path: The embedding or hyper network file (.pt)
         :return:
         """
-        self.__stable_diffusion.load_textual_inversion(pretrained_model_name_or_path)
+        self.__pipeline.load_textual_inversion(pretrained_model_name_or_path)
         print(f'Loaded Textual Inversion (Embedding): {pretrained_model_name_or_path}')
         return self
 
@@ -74,10 +74,10 @@ class GathDrawer:
 
             if "text" in layer:
                 layer_infos = layer.split(LORA_PREFIX_TEXT_ENCODER + "_")[-1].split("_")
-                curr_layer = self.__stable_diffusion.text_encoder
+                curr_layer = self.__pipeline.text_encoder
             else:
                 layer_infos = layer.split(LORA_PREFIX_UNET + "_")[-1].split("_")
-                curr_layer = self.__stable_diffusion.unet
+                curr_layer = self.__pipeline.unet
 
             # find the target layer
             temp_name = layer_infos.pop(0)
@@ -123,7 +123,7 @@ class GathDrawer:
         """
         https://github.com/CompVis/stable-diffusion/issues/239#issuecomment-1241838550
         """
-        self.__stable_diffusion.safety_checker = self.build_dummy_safety_checker()
+        self.__pipeline.safety_checker = self.build_dummy_safety_checker()
         return self
 
     def change_scheduler(self, new_scheduler):
@@ -141,30 +141,30 @@ class GathDrawer:
         :param new_scheduler:
         :return:
         """
-        self.__stable_diffusion.scheduler = new_scheduler
+        self.__pipeline.scheduler = new_scheduler
         return self
 
     def change_scheduler_to_euler_discrete(self):
-        return self.change_scheduler(EulerDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config))
+        return self.change_scheduler(EulerDiscreteScheduler.from_config(self.__pipeline.scheduler.config))
 
     def change_scheduler_to_euler_ancestral_discrete(self):
         return self.change_scheduler(
-            EulerAncestralDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config))
+            EulerAncestralDiscreteScheduler.from_config(self.__pipeline.scheduler.config))
 
     def change_scheduler_to_ddim(self):
-        return self.change_scheduler(DDIMScheduler.from_config(self.__stable_diffusion.scheduler.config))
+        return self.change_scheduler(DDIMScheduler.from_config(self.__pipeline.scheduler.config))
 
     def change_scheduler_to_dpm_solver_multistep(self):
-        return self.change_scheduler(DPMSolverMultistepScheduler.from_config(self.__stable_diffusion.scheduler.config))
+        return self.change_scheduler(DPMSolverMultistepScheduler.from_config(self.__pipeline.scheduler.config))
 
     def change_scheduler_to_lms_discrete(self):
-        return self.change_scheduler(LMSDiscreteScheduler.from_config(self.__stable_diffusion.scheduler.config))
+        return self.change_scheduler(LMSDiscreteScheduler.from_config(self.__pipeline.scheduler.config))
 
     def change_scheduler_to_pndm(self):
-        return self.change_scheduler(PNDMScheduler.from_config(self.__stable_diffusion.scheduler.config))
+        return self.change_scheduler(PNDMScheduler.from_config(self.__pipeline.scheduler.config))
 
     def change_scheduler_to_uni_pc_multistep(self):
-        return self.change_scheduler(UniPCMultistepScheduler.from_config(self.__stable_diffusion.scheduler.config))
+        return self.change_scheduler(UniPCMultistepScheduler.from_config(self.__pipeline.scheduler.config))
 
     def set_upscaler(self, upscaler: StableDiffusionLatentUpscalePipeline):
         self.__upscaler = upscaler
@@ -198,7 +198,7 @@ class GathDrawer:
             # print('upscaler is ready')
 
             kwargs['output_type'] = "latent"
-            low_res_latents = self.__stable_diffusion(prompt, **kwargs).images
+            low_res_latents = self.__pipeline(prompt, **kwargs).images
 
             # print(type(low_res_latents))
 
@@ -212,7 +212,7 @@ class GathDrawer:
                 generator=kwargs['generator'],
             )
         else:
-            return self.__stable_diffusion(prompt, **kwargs)
+            return self.__pipeline(prompt, **kwargs)
 
     def __upscale(self, prompt, low_res_latents, steps, guidance_scale, generator):
         return self.__upscaler(
@@ -224,14 +224,14 @@ class GathDrawer:
         )
 
     def save_model(self, save_directory: str):
-        self.__stable_diffusion.save_pretrained(save_directory, True)
+        self.__pipeline.save_pretrained(save_directory, True)
 
 
 if __name__ == '__main__':
     model_name = 'IDEA-CCNL/Taiyi-Stable-Diffusion-1B-Chinese-v0.1'
     model_dir = "E:\\sinri\\Taiyi-Stable-Diffusion-1B-Chinese-v0.1"
     # Fetched Model Manually Before Running
-    d = GathDrawer(model_dir)
+    d = GathDrawer.from_pretrained(model_dir)
     # Download Model Automatically (SLOW)
     # d=TaiyiDrawer(model_name)
 

@@ -1,6 +1,7 @@
 import io
 
 import requests
+import safetensors
 import torch
 from omegaconf import OmegaConf
 
@@ -156,8 +157,11 @@ if __name__ == "__main__":
     #
     # args = parser.parse_args()
 
-    vae_pt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora\\YOZORA.vae.pt'
-    dump_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora_diffuser'
+    # vae_pt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora\\YOZORA.vae.pt'
+    # dump_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_yozora_diffuser'
+
+    vae_pt_path='E:\\OneDrive\\Leqee\\ai\\civitai\\vae_BerrysMix\\BerrysMix.vae.safetensors'
+    dump_path= 'E:\\OneDrive\\Leqee\\ai\\repo\\BerrysMixVae'
 
     c = GathVaeConverter()
     c.vae_pt_to_vae_diffuser(vae_pt_path, dump_path)

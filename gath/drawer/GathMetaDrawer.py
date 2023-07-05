@@ -3,6 +3,7 @@ from typing import Optional
 
 import torch
 from diffusers import AutoencoderKL, StableDiffusionLatentUpscalePipeline
+from diffusers.models.modeling_utils import load_state_dict
 from transformers import CLIPTokenizer
 
 from gath.drawer.GathDrawer import GathDrawer
@@ -80,8 +81,12 @@ class GathMetaDrawer:
 
             # vae
             if model_meta.__contains__('vae') and isinstance(model_meta['vae'], dict):
-                vae_value = model_meta['vae'].get('path')
-                params['vae'] = AutoencoderKL.from_pretrained(vae_value)
+                if model_meta['vae'].__contains__('ckpt'):
+                    vae_ckpt = model_meta['vae'].get('ckpt')
+                    params['vae'] = load_state_dict(vae_ckpt)
+                elif model_meta['vae'].__contains__('path'):
+                    vae_path = model_meta['vae'].get('path')
+                    params['vae'] = AutoencoderKL.from_pretrained(vae_path)
 
             if model_meta.__contains__('path'):
                 drawer = GathDrawer.from_pretrained(model_meta['path'], **params)
