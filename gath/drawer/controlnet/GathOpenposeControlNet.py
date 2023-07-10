@@ -1,10 +1,7 @@
-from typing import Union, List, Optional, Callable, Dict, Any
-
 import torch
 from controlnet_aux import OpenposeDetector
 from diffusers import ControlNetModel, StableDiffusionControlNetPipeline, UniPCMultistepScheduler
 from diffusers.utils import load_image
-from torch import Generator
 
 from gath.drawer.controlnet.GathControlNetDrawer import GathControlNetDrawer
 
@@ -40,73 +37,11 @@ class GathOpenposeControlNet(GathControlNetDrawer):
 
     def __init__(self, controlnet_mixed_model: StableDiffusionControlNetPipeline):
         super().__init__(controlnet_mixed_model)
-        self.__pose = None
-        # self.__openpose_detector = openpose_detector
         self.__pipeline: StableDiffusionControlNetPipeline = controlnet_mixed_model
 
     def detect_pose(self, openpose_detector: OpenposeDetector, base_pose_image_path: str):
         base_pose_image = load_image(base_pose_image_path)
-        return self.set_pose(openpose_detector(base_pose_image))
-
-    def set_pose(self, pose):
-        self.__pose = pose
-        return self
-
-    def get_pose(self):
-        return self.__pose
-
-    def draw(
-            self,
-            prompt: Union[str, List[str]] = None,
-            height: Optional[int] = None,
-            width: Optional[int] = None,
-            num_inference_steps: int = 50,
-            guidance_scale: float = 7.5,
-            negative_prompt: Optional[Union[str, List[str]]] = None,
-            num_images_per_prompt: Optional[int] = 1,
-            eta: float = 0.0,
-            generator: Optional[Union[torch.Generator, List[torch.Generator]]] = None,
-            latents: Optional[torch.FloatTensor] = None,
-            prompt_embeds: Optional[torch.FloatTensor] = None,
-            negative_prompt_embeds: Optional[torch.FloatTensor] = None,
-            output_type: Optional[str] = "pil",
-            return_dict: bool = True,
-            callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
-            callback_steps: int = 1,
-            cross_attention_kwargs: Optional[Dict[str, Any]] = None,
-            controlnet_conditioning_scale: Union[float, List[float]] = 1.0,
-            guess_mode: bool = False,
-            device: Optional[str] = None, seed: Optional[int] = None
-    ):
-        kwargs = {'image': self.__pose}
-
-        keys = [
-            'prompt',
-            'height',
-            'width',
-            'num_inference_steps',
-            'guidance_scale',
-            'negative_prompt',
-            'num_images_per_prompt',
-            'eta',
-            'generator',
-            'latents',
-            'prompt_embeds',
-            'negative_prompt_embeds',
-            'output_type',
-            'return_dict',
-            'callback',
-            'callback_steps',
-            'cross_attention_kwargs',
-            'controlnet_conditioning_scale',
-            'guess_mode',
-        ]
-        for key in keys:
-            v = eval(key)
-            if v is not None:
-                kwargs[key] = v
-
-        self._draw_with_controlnet(seed=seed, device=device, **kwargs)
+        return self.set_control_net_image(openpose_detector(base_pose_image))
 
     @staticmethod
     def debug():

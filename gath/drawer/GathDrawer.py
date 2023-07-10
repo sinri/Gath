@@ -1,12 +1,9 @@
 import os
-from collections import defaultdict
 from typing import Union, List, Optional
 
-import torch
-from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler, \
-    DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler, AutoencoderKL, \
-    StableDiffusionLatentUpscalePipeline, UniPCMultistepScheduler
-from safetensors.torch import load_file
+from diffusers import StableDiffusionPipeline, StableDiffusionLatentUpscalePipeline, SchedulerMixin
+
+from gath.drawer.GathDrawKit import GathDrawKit
 
 
 class GathDrawer:
@@ -34,7 +31,7 @@ class GathDrawer:
         return GathDrawer(d)
 
     def __init__(self, pipeline: StableDiffusionPipeline):
-        self.__pipeline=pipeline
+        self.__pipeline = pipeline
         self.__upscaler: Optional[StableDiffusionLatentUpscalePipeline] = None
 
     def to_device(self, device):
@@ -46,87 +43,28 @@ class GathDrawer:
         self.__pipeline = self.__pipeline.to(device)
         return self
 
-    def load_textual_inversion(self, pretrained_model_name_or_path):
+    def load_textual_inversion(self, pretrained_model_name_or_path, **kwargs):
         """
         :param pretrained_model_name_or_path: The embedding or hyper network file (.pt)
         :return:
         """
-        self.__pipeline.load_textual_inversion(pretrained_model_name_or_path)
-        print(f'Loaded Textual Inversion (Embedding): {pretrained_model_name_or_path}')
+        GathDrawKit.load_textual_inversion(self.__pipeline, pretrained_model_name_or_path, **kwargs)
+        print(f'Loaded Textual Inversion (Embedding): {pretrained_model_name_or_path}, {kwargs}')
         return self
 
     def load_lora_weights(self, checkpoint_path, multiplier, device, dtype):
-        LORA_PREFIX_UNET = "lora_unet"
-        LORA_PREFIX_TEXT_ENCODER = "lora_te"
-        # load LoRA weight from .safetensors
-        state_dict = load_file(checkpoint_path, device=device)
-
-        updates = defaultdict(dict)
-        for key, value in state_dict.items():
-            # it is suggested to print out the key, it usually will be something like below
-            # "lora_te_text_model_encoder_layers_0_self_attn_k_proj.lora_down.weight"
-
-            layer, elem = key.split('.', 1)
-            updates[layer][elem] = value
-
-        # directly update weight in diffusers model
-        for layer, elems in updates.items():
-
-            if "text" in layer:
-                layer_infos = layer.split(LORA_PREFIX_TEXT_ENCODER + "_")[-1].split("_")
-                curr_layer = self.__pipeline.text_encoder
-            else:
-                layer_infos = layer.split(LORA_PREFIX_UNET + "_")[-1].split("_")
-                curr_layer = self.__pipeline.unet
-
-            # find the target layer
-            temp_name = layer_infos.pop(0)
-            while len(layer_infos) > -1:
-                try:
-                    curr_layer = curr_layer.__getattr__(temp_name)
-                    if len(layer_infos) > 0:
-                        temp_name = layer_infos.pop(0)
-                    elif len(layer_infos) == 0:
-                        break
-                except Exception:
-                    if len(temp_name) > 0:
-                        temp_name += "_" + layer_infos.pop(0)
-                    else:
-                        temp_name = layer_infos.pop(0)
-
-            # get elements for this layer
-            weight_up = elems['lora_up.weight'].to(dtype)
-            weight_down = elems['lora_down.weight'].to(dtype)
-            alpha = elems['alpha']
-            if alpha:
-                alpha = alpha.item() / weight_up.shape[1]
-            else:
-                alpha = 1.0
-
-            # update weight
-            if len(weight_up.shape) == 4:
-                curr_layer.weight.data += multiplier * alpha * torch.mm(
-                    weight_up.squeeze(3).squeeze(2),
-                    weight_down.squeeze(3).squeeze(2)
-                ).unsqueeze(2).unsqueeze(3)
-            else:
-                curr_layer.weight.data += multiplier * alpha * torch.mm(weight_up, weight_down)
-
-        print(f"LOADED LoRA {checkpoint_path}, {multiplier}, {device}")
+        GathDrawKit.load_lora_weights(self.__pipeline, checkpoint_path, multiplier, device, dtype)
+        print(f"LOADED LoRA: {checkpoint_path}, {multiplier}, {device}, {dtype}")
         return self
-
-    @staticmethod
-    def build_dummy_safety_checker():
-        return lambda images, clip_input: (images, False)
 
     def turn_off_nsfw_check(self):
         """
         https://github.com/CompVis/stable-diffusion/issues/239#issuecomment-1241838550
         """
-        self.__pipeline.safety_checker = self.build_dummy_safety_checker()
+        GathDrawKit.turn_off_nsfw_check(self.__pipeline)
         return self
 
-    def change_scheduler(self, new_scheduler):
+    def change_scheduler(self, new_scheduler: SchedulerMixin):
         """
         DDIMScheduler
         DPMSolverMultistepScheduler (別名 DPM-Solver++ diffusers v0.8.0~)
@@ -145,26 +83,36 @@ class GathDrawer:
         return self
 
     def change_scheduler_to_euler_discrete(self):
-        return self.change_scheduler(EulerDiscreteScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_euler_discrete(self.__pipeline)
+        return self
 
     def change_scheduler_to_euler_ancestral_discrete(self):
-        return self.change_scheduler(
-            EulerAncestralDiscreteScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_euler_ancestral_discrete(self.__pipeline)
+        return self
 
     def change_scheduler_to_ddim(self):
-        return self.change_scheduler(DDIMScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_ddim(self.__pipeline)
+        return self
 
     def change_scheduler_to_dpm_solver_multistep(self):
-        return self.change_scheduler(DPMSolverMultistepScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_dpm_solver_multistep(self.__pipeline)
+        return self
 
     def change_scheduler_to_lms_discrete(self):
-        return self.change_scheduler(LMSDiscreteScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_lms_discrete(self.__pipeline)
+        return self
 
     def change_scheduler_to_pndm(self):
-        return self.change_scheduler(PNDMScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_pndm(self.__pipeline)
+        return self
 
     def change_scheduler_to_uni_pc_multistep(self):
-        return self.change_scheduler(UniPCMultistepScheduler.from_config(self.__pipeline.scheduler.config))
+        GathDrawKit.change_scheduler_to_uni_pc_multistep(self.__pipeline)
+        return self
+
+    def change_scheduler_to_kdpm_2_discrete(self):
+        GathDrawKit.change_scheduler_to_kdpm_2_discrete(self.__pipeline)
+        return self
 
     def set_upscaler(self, upscaler: StableDiffusionLatentUpscalePipeline):
         self.__upscaler = upscaler

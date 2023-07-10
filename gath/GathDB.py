@@ -1,3 +1,4 @@
+import datetime
 from typing import Tuple, Optional
 
 from nehushtan.mysql.MySQLAnyTable import MySQLAnyTable
@@ -84,13 +85,13 @@ class GathDB:
                 .select_in_table() \
                 .add_select_field("*") \
                 .add_condition(MySQLCondition.make_equal('application_id', row['application_id'])) \
-                .query_for_result_as_tuple_of_dict()\
+                .query_for_result_as_tuple_of_dict() \
                 .get_fetched_rows_as_tuple()
             row['textual_inversion_rows'] = self.build_inn_application_textual_inversion_table() \
                 .select_in_table() \
                 .add_select_field("*") \
                 .add_condition(MySQLCondition.make_equal('application_id', row['application_id'])) \
-                .query_for_result_as_tuple_of_dict()\
+                .query_for_result_as_tuple_of_dict() \
                 .get_fetched_rows_as_tuple()
             return row
         else:
@@ -142,7 +143,36 @@ class GathDB:
         if not result.is_executed():
             raise Exception(result.get_error())
 
+    def build_civitai_model_table(self):
+        return CivitaiTable(self.__db, 'civitai_model')
+
+    def build_civitai_model_tag_table(self):
+        return CivitaiTable(self.__db, 'civitai_model_tag')
+
+    def build_civitai_model_version_table(self):
+        return CivitaiTable(self.__db, 'civitai_model_version')
+
+    def build_civitai_model_version_file_table(self):
+        return CivitaiTable(self.__db, 'civitai_model_version_file')
+
+    def build_civitai_image_table(self):
+        return CivitaiTable(self.__db, 'civitai_image')
+
+    @staticmethod
+    def tranform_tz_time_to_bj(origin_date_str, tz_format="%Y-%m-%dT%H:%M:%S.%fZ"):
+        # origin_date_str = "2019-07-26T08:20:54Z"
+        utc_date = datetime.datetime.strptime(origin_date_str, tz_format)
+        local_date = utc_date + datetime.timedelta(hours=8)
+        local_date_str = datetime.datetime.strftime(local_date, '%Y-%m-%d %H:%M:%S')
+        # print(local_date_str)  # 2019-07-26 16:20:54
+        return local_date_str
+
 
 class InnApplicationTable(MySQLAnyTable):
+    def __init__(self, mysql_kit: MySQLKit, table_name: str):
+        super().__init__(mysql_kit, table_name)
+
+
+class CivitaiTable(MySQLAnyTable):
     def __init__(self, mysql_kit: MySQLKit, table_name: str):
         super().__init__(mysql_kit, table_name)
