@@ -15,23 +15,8 @@ class GathCheckpointMerger:
 
 
 if __name__ == '__main__':
-    # ckpt_path = 'E:\\sinri\\stable-diffusion-webui\\models\\Stable-diffusion\\anything-v5-0.7.safetensors'
-    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\AnythingV5'
-
-    # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ICBINP\\icbinpICantBelieveIts_final.safetensors'
-    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\ICBINP'
-
-    # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\DisneyPixarCartoon\\disneyPixarCartoon_v10.safetensors'
-    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\DisneyPixarCartoon'
-
-    # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\NightSkyYozoraStyleModel\\nightSkyYOZORAStyle_yozoraV1PurnedFp16.safetensors'
-    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\NightSkyYozoraStyleModel'
-
-    # ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_RealDosMix\\realdosmix_.safetensors'
-    # repo_path = 'E:\\OneDrive\\Leqee\\ai\\repo\\RealDosMix'
-
-    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\vae_BerrysMix\\BerrysMix.vae.safetensors'
-    repo_path = 'E:\\OneDrive\\Leqee\\ai\\repo\\BerrysMixVae'
+    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_PerfectWorld\\perfectWorld_v4Baked.safetensors'
+    repo_path = 'E:\\OneDrive\\Leqee\\ai\\repo\\PerfectWorld'
 
     x = GathCheckpointMerger(ckpt_path)
     x.save_model(repo_path)
