@@ -1,6 +1,6 @@
 from nehushtan.httpd.NehushtanHTTPRequestController import NehushtanHTTPRequestController
 
-from gath.inn.GathDB import GathDB
+from gath.GathDB import GathDB
 
 
 class ApplicationController(NehushtanHTTPRequestController):
