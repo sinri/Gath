@@ -247,6 +247,8 @@ class CivitaiCrawler:
                         'hash_sha256': hash_value,
                         'download_url': file['downloadUrl'],
                         'refresh_time': tm_version_file.now(),
+                        'version_id':model_version['id'],
+                        'model_id': data['id'],
                     })
 
             images = model_version.get('images')
@@ -278,5 +280,6 @@ class CivitaiCrawler:
 
 if __name__ == '__main__':
     cc = CivitaiCrawler()
-    local_dir = '/Users/leqee/code/TaiyiDrawer/workspace/civitai_meta'
-    cc.fetch_all_to_local(21, local_dir)
+    #local_dir = '/Users/leqee/code/TaiyiDrawer/workspace/civitai_meta'
+    local_dir='E:\\sinri\\TaiyiDrawer\\workspace\\civitai_meta'
+    cc.fetch_all_to_local(321, local_dir)
