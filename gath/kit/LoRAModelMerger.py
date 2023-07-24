@@ -26,7 +26,7 @@ class LoRAModelMerger:
         """
         drawer = GathDrawer.from_pretrained(self.__base_model_dir)
         drawer.to_device(self.__device)
-        drawer.load_lora_weights(lora_model_safetensors_file, multiplier, self.__device)
+        drawer.load_lora_weights_with_multiplier(lora_model_safetensors_file, multiplier, self.__device)
         drawer.save_model(huggingface_repo_dir)
 
 

@@ -12,13 +12,13 @@ class GathControlNetDrawer:
     def __init__(self, pipeline: StableDiffusionControlNetPipeline):
         self.__pipeline = pipeline
         self.__drawn = None
-        self.__control_net_image: Optional[Image, torch.FloatTensor] = None
+        self.__control_net_image: Optional[Union[Image, torch.FloatTensor]] = None
 
     def set_scheduler(self, scheduler):
         self.__pipeline.scheduler = scheduler
         return self
 
-    def set_control_net_image(self, control_net_image: Optional[Image, torch.FloatTensor]):
+    def set_control_net_image(self, control_net_image: Optional[Union[Image, torch.FloatTensor]]):
         self.__control_net_image = control_net_image
         return self
 
@@ -35,7 +35,7 @@ class GathControlNetDrawer:
         return self
 
     def load_lora_weights(self, checkpoint_path, multiplier, device, dtype):
-        GathDrawKit.load_lora_weights(self.__pipeline, checkpoint_path, multiplier, device, dtype)
+        GathDrawKit.load_lora_weights_with_multiplier(self.__pipeline, checkpoint_path, multiplier, device, dtype)
         print(f"LOADED LoRA: {checkpoint_path}, {multiplier}, {device}, {dtype}")
         return self
 

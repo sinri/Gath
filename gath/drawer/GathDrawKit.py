@@ -1,9 +1,12 @@
+import os
 from collections import defaultdict
+from typing import Union, Dict, Optional
 
 import torch
 from diffusers import DiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler, \
-    DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler, UniPCMultistepScheduler, KDPM2DiscreteScheduler
-from diffusers.loaders import TextualInversionLoaderMixin
+    DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler, UniPCMultistepScheduler, KDPM2DiscreteScheduler, \
+    StableDiffusionPipeline
+from diffusers.loaders import TextualInversionLoaderMixin, LoraLoaderMixin
 from safetensors.torch import load_file
 
 
@@ -20,6 +23,21 @@ class GathDrawKit:
         pipeline.safety_checker = GathDrawKit.build_dummy_safety_checker()
 
     @staticmethod
+    def load_lora_weight(
+            pipeline: LoraLoaderMixin,
+            pretrained_model_name_or_path_or_dict: Union[str, Dict[str, torch.Tensor]],
+            **kwargs
+    ):
+        """
+
+        :param pipeline:
+        :param pretrained_model_name_or_path_or_dict:
+        :param kwargs: you may need local_files_only=True
+        :return:
+        """
+        pipeline.load_lora_weights(pretrained_model_name_or_path_or_dict, **kwargs)
+
+    @staticmethod
     def load_textual_inversion(
             pipeline: TextualInversionLoaderMixin,
             pretrained_model_name_or_path,
@@ -28,12 +46,13 @@ class GathDrawKit:
         """
         :param pipeline:
         :param pretrained_model_name_or_path: The embedding or hyper network file (.pt)
+        :param kwargs you may need local_files_only=True
         :return:
         """
         pipeline.load_textual_inversion(pretrained_model_name_or_path, **kwargs)
 
     @staticmethod
-    def load_lora_weights(pipeline: DiffusionPipeline, checkpoint_path, multiplier, device, dtype):
+    def load_lora_weights_with_multiplier(pipeline: DiffusionPipeline, checkpoint_path, multiplier, device, dtype):
         LORA_PREFIX_UNET = "lora_unet"
         LORA_PREFIX_TEXT_ENCODER = "lora_te"
         # load LoRA weight from .safetensors

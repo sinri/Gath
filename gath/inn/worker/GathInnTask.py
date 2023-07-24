@@ -82,5 +82,6 @@ class GathInnTask:
         meta['steps'] = self.__row.get('steps')
         meta['cfg'] = float(self.__row.get('cfg'))
         meta['scheduler'] = self.__row.get('scheduler')
+        meta['vae']=self.__row.get('vae')
 
         return meta

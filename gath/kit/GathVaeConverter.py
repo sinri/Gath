@@ -165,3 +165,5 @@ if __name__ == "__main__":
 
     c = GathVaeConverter()
     c.vae_pt_to_vae_diffuser(vae_pt_path, dump_path)
+
+

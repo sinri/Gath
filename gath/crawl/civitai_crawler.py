@@ -7,7 +7,7 @@ from typing import Optional, Union, List, Tuple
 
 import requests
 
-from gath.GathDB import GathDB
+from gath.kit.GathDB import GathDB
 
 
 class CivitaiEntityType(Enum):

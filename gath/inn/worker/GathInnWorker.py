@@ -3,7 +3,7 @@ from typing import Optional
 
 from nehushtan.logger.NehushtanFileLogger import NehushtanFileLogger
 
-from gath.GathDB import GathDB
+from gath.kit.GathDB import GathDB
 from gath.inn.worker.GathInnTask import GathInnTask
 
 

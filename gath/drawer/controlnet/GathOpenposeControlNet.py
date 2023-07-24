@@ -1,5 +1,6 @@
 import torch
 from controlnet_aux import OpenposeDetector
+from cv2 import UMat
 from diffusers import ControlNetModel, StableDiffusionControlNetPipeline, UniPCMultistepScheduler
 from diffusers.utils import load_image
 
@@ -41,11 +42,24 @@ class GathOpenposeControlNet(GathControlNetDrawer):
 
     def detect_pose(self, openpose_detector: OpenposeDetector, base_pose_image_path: str):
         base_pose_image = load_image(base_pose_image_path)
-        return self.set_control_net_image(openpose_detector(base_pose_image))
+
+        #debug
+        np_post:UMat = openpose_detector(base_pose_image, output_type='np')
+        print('np post ---- start')
+        for i in range(len(np_post)):
+            row = np_post[i]
+            for j in range(len(row)):
+                cell=row[j]
+                if cell[0]+cell[1]+cell[2]!=0:
+                    print(f'cell[{i},{j}]: {cell}')
+        print('np post ---- end')
+
+        p=openpose_detector(base_pose_image)
+        return self.set_control_net_image(p)
 
     @staticmethod
     def debug():
-        face_pretrained_model_or_path = "E:\\OneDrive\\Leqee\\ai\\repo\\lllyasviel\\Annotators"
+        face_pretrained_model_or_path = "E:\\sinri\\HuggingFace\\lllyasviel\\Annotators"
 
         openpose_detector: OpenposeDetector = OpenposeDetector.from_pretrained(face_pretrained_model_or_path)
         print(type(openpose_detector))
@@ -54,11 +68,16 @@ class GathOpenposeControlNet(GathControlNetDrawer):
         base_pose_image = load_image(base_pose_image_path)
 
         #     def __call__(self, input_image, detect_resolution=512, image_resolution=512, include_body=True, include_hand=False, include_face=False, hand_and_face=None, output_type="pil", **kwargs):
+        np_post=openpose_detector(base_pose_image,output_type='np')
+        print('np post ---- start')
+        print(np_post)
+        print('np post ---- end')
+
         poses = openpose_detector(base_pose_image)
         poses.show()
 
         # controlnet_model_path="fusing/stable-diffusion-v1-5-controlnet-openpose"
-        controlnet_model_path = "E:\\OneDrive\\Leqee\\ai\\repo\\lllyasviel\\sd-controlnet-openpose"
+        controlnet_model_path = "E:\\sinri\\HuggingFace\\lllyasviel\\sd-controlnet-openpose"
         controlnet = ControlNetModel.from_pretrained(
             controlnet_model_path, torch_dtype=torch.float16
         )
@@ -86,11 +105,11 @@ class GathOpenposeControlNet(GathControlNetDrawer):
 
 
 if __name__ == '__main__':
-    controlnet_model_path = "E:\\OneDrive\\Leqee\\ai\\repo\\lllyasviel\\sd-controlnet-openpose"
+    controlnet_model_path = "E:\\sinri\\HuggingFace\\lllyasviel\\sd-controlnet-openpose"
     controlnet = GathOpenposeControlNet.load_controlnet(controlnet_model_path, torch_dtype=torch.float16)
 
     txt2img_model_path = "E:\\OneDrive\\Leqee\\ai\\repo\\stable-diffusion-v1-5"
-    txt2img_model_path ='E:\\OneDrive\\Leqee\\ai\\repo\\BeenYou'
+    txt2img_model_path ='E:\\sinri\\HuggingFace\\BeenYou'
     txt2img_model = GathOpenposeControlNet.load_model_with_controlnet(txt2img_model_path, controlnet,
                                                                       torch_dtype=torch.float16)
 

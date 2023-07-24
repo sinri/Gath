@@ -7,6 +7,7 @@ from diffusers.models.modeling_utils import load_state_dict
 from transformers import CLIPTokenizer
 
 from gath.drawer.GathDrawer import GathDrawer
+from gath.env import inn_vae_dict
 
 
 class GathMetaDrawer:
@@ -80,12 +81,18 @@ class GathMetaDrawer:
                 params['custom_pipeline'] = "lpw_stable_diffusion"
 
             # vae
-            if model_meta.__contains__('vae') and isinstance(model_meta['vae'], dict):
-                if model_meta['vae'].__contains__('ckpt'):
-                    vae_ckpt = model_meta['vae'].get('ckpt')
+            vae_code = self.__draw_meta.get('vae')
+            if vae_code != '':
+                vae_meta = inn_vae_dict.get(vae_code)
+            else:
+                vae_meta = model_meta.get('vae')
+
+            if vae_meta is not None and isinstance(vae_meta, dict):
+                if vae_meta.__contains__('ckpt'):
+                    vae_ckpt = vae_meta.get('ckpt')
                     params['vae'] = load_state_dict(vae_ckpt)
-                elif model_meta['vae'].__contains__('path'):
-                    vae_path = model_meta['vae'].get('path')
+                elif vae_meta.__contains__('path'):
+                    vae_path = vae_meta.get('path')
                     params['vae'] = AutoencoderKL.from_pretrained(vae_path)
 
             if model_meta.__contains__('path'):
@@ -124,7 +131,7 @@ class GathMetaDrawer:
                         lora_dtype = torch.bfloat16
                     else:
                         lora_dtype = torch.float32
-                drawer.load_lora_weights(checkpoint_path, multiplier, self.__device, lora_dtype)
+                drawer.load_lora_weights_with_multiplier(checkpoint_path, multiplier, self.__device, lora_dtype)
 
         if self.__draw_meta.__contains__('textual_inversion'):
             if isinstance(self.__draw_meta['textual_inversion'], dict):
@@ -160,6 +167,8 @@ class GathMetaDrawer:
             drawer.change_scheduler_to_lms_discrete()
         elif scheduler == 'uni_pc_m':
             drawer.change_scheduler_to_uni_pc_multistep()
+        elif scheduler == 'kdpm2d':
+            drawer.change_scheduler_to_kdpm_2_discrete()
         elif scheduler is None or scheduler == '':
             print("USE DEFAULT SCHEDULER")
         else:

@@ -53,7 +53,7 @@ class GathDrawer:
         return self
 
     def load_lora_weights(self, checkpoint_path, multiplier, device, dtype):
-        GathDrawKit.load_lora_weights(self.__pipeline, checkpoint_path, multiplier, device, dtype)
+        GathDrawKit.load_lora_weights_with_multiplier(self.__pipeline, checkpoint_path, multiplier, device, dtype)
         print(f"LOADED LoRA: {checkpoint_path}, {multiplier}, {device}, {dtype}")
         return self
 
