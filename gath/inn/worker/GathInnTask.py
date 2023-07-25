@@ -84,4 +84,6 @@ class GathInnTask:
         meta['scheduler'] = self.__row.get('scheduler')
         meta['vae']=self.__row.get('vae')
 
+        meta['clip_skip']=self.__row.get('clip_skip')
+
         return meta

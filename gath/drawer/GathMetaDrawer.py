@@ -9,10 +9,10 @@ from transformers import CLIPTokenizer
 from gath.drawer.GathDrawer import GathDrawer
 from gath.env import inn_vae_dict
 
-
 class GathMetaDrawer:
     def __init__(self, draw_meta: dict):
         self.__draw_meta = draw_meta
+        self.__base_model_string: Optional[str] = None
 
         self.__prompt: str = self.__draw_meta['prompt']
         self.__prompt.replace('\n', ' ')
@@ -71,8 +71,8 @@ class GathMetaDrawer:
 
         if model_meta.__contains__('type') and model_meta['type'] == 'ckpt':
             # model is a file in safetensors or ckpt
-            model_path: str = model_meta['path']
-            drawer = GathDrawer.from_ckpt(model_path, **params)
+            self.__base_model_string = model_meta['path']
+            drawer = GathDrawer.from_ckpt(self.__base_model_string, **params)
         else:
             # model is a dir or a model id str
             if tokenizer is not None:
@@ -96,9 +96,12 @@ class GathMetaDrawer:
                     params['vae'] = AutoencoderKL.from_pretrained(vae_path)
 
             if model_meta.__contains__('path'):
-                drawer = GathDrawer.from_pretrained(model_meta['path'], **params)
+                params['local_files_only'] = True
+                self.__base_model_string = model_meta.get('path')
+                drawer = GathDrawer.from_pretrained(self.__base_model_string, **params)
             else:
-                drawer = GathDrawer.from_pretrained(model_meta['name'], **params)
+                self.__base_model_string = model_meta.get('name')
+                drawer = GathDrawer.from_pretrained(self.__base_model_string, **params)
 
         if self.__device is not None:
             drawer.to_device(self.__device)
@@ -148,27 +151,42 @@ class GathMetaDrawer:
                     textual_inversion_v = textual_inversion['path']
                 drawer.load_textual_inversion(textual_inversion_v)
 
+        if self.__draw_meta.__contains__('clip_skip'):
+            clip_skip: int = self.__draw_meta.get('clip_skip')
+            if clip_skip>0:
+                drawer.skip_clip(self.__base_model_string, clip_skip)
+
         return drawer
 
     def __decide_scheduler(self, drawer):
         # euler, euler_a, default as pndm
         scheduler = self.__draw_meta['scheduler']
-        if scheduler == 'euler_a':
+        if scheduler == 'Euler a':
             drawer.change_scheduler_to_euler_ancestral_discrete()
-        elif scheduler == 'euler':
+        elif scheduler == 'Euler':
             drawer.change_scheduler_to_euler_discrete()
-        elif scheduler == 'ddim':
+        elif scheduler == 'DDIM':
             drawer.change_scheduler_to_ddim()
-        elif scheduler == 'pndm':
+        elif scheduler == 'DDPM':
+            drawer.change_scheduler_to_ddpm()
+        elif scheduler == 'DPM++ 2M Karras':
+            drawer.change_scheduler_to_dpm_solver_multistep_karras()
+        elif scheduler == 'DPM++ 2S':
+            drawer.change_scheduler_to_dpm_pp_2s()
+        elif scheduler == 'PNDM':
             drawer.change_scheduler_to_pndm()
-        elif scheduler == 'dpm_sm':
+        elif scheduler == 'DPM++ 2M':
             drawer.change_scheduler_to_dpm_solver_multistep()
-        elif scheduler == 'lms':
+        elif scheduler == 'LMS':
             drawer.change_scheduler_to_lms_discrete()
-        elif scheduler == 'uni_pc_m':
+        elif scheduler == 'UniPcM':
             drawer.change_scheduler_to_uni_pc_multistep()
-        elif scheduler == 'kdpm2d':
+        elif scheduler == 'DPM2':
             drawer.change_scheduler_to_kdpm_2_discrete()
+        elif scheduler == 'DPM2 a':
+            drawer.change_scheduler_to_dpm2a()
+        elif scheduler == 'Heun':
+            drawer.change_scheduler_to_heun()
         elif scheduler is None or scheduler == '':
             print("USE DEFAULT SCHEDULER")
         else:

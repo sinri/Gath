@@ -15,8 +15,8 @@ class GathCheckpointMerger:
 
 
 if __name__ == '__main__':
-    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_CamelliaMixNSFW\\camelliamixNSFW_v11.safetensors'
-    repo_path = 'E:\\sinri\\HuggingFace\\CamelliaMixNSFW'
+    ckpt_path = 'E:\\OneDrive\\Leqee\\ai\\civitai\\ckpt_OrangeChillMix\\orangechillmix_v70.safetensors'
+    repo_path = 'E:\\sinri\\HuggingFace\\OrangeChillMix'
 
     x = GathCheckpointMerger(ckpt_path)
     x.save_model(repo_path)

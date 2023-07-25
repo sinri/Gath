@@ -1,6 +1,7 @@
 import os
 from typing import Union, List, Optional
 
+import torch
 from diffusers import StableDiffusionPipeline, StableDiffusionLatentUpscalePipeline, SchedulerMixin
 
 from gath.drawer.GathDrawKit import GathDrawKit
@@ -30,6 +31,11 @@ class GathDrawer:
         d = StableDiffusionPipeline.from_ckpt(pretrained_model_link_or_path, **kwargs)
         return GathDrawer(d)
 
+    @classmethod
+    def from_single_file(cls, pretrained_model_link_or_path, **kwargs):
+        d = StableDiffusionPipeline.from_single_file(pretrained_model_link_or_path, **kwargs)
+        return GathDrawer(d)
+
     def __init__(self, pipeline: StableDiffusionPipeline):
         self.__pipeline = pipeline
         self.__upscaler: Optional[StableDiffusionLatentUpscalePipeline] = None
@@ -52,7 +58,7 @@ class GathDrawer:
         print(f'Loaded Textual Inversion (Embedding): {pretrained_model_name_or_path}, {kwargs}')
         return self
 
-    def load_lora_weights(self, checkpoint_path, multiplier, device, dtype):
+    def load_lora_weights_with_multiplier(self, checkpoint_path, multiplier, device, dtype):
         GathDrawKit.load_lora_weights_with_multiplier(self.__pipeline, checkpoint_path, multiplier, device, dtype)
         print(f"LOADED LoRA: {checkpoint_path}, {multiplier}, {device}, {dtype}")
         return self
@@ -112,6 +118,30 @@ class GathDrawer:
 
     def change_scheduler_to_kdpm_2_discrete(self):
         GathDrawKit.change_scheduler_to_kdpm_2_discrete(self.__pipeline)
+        return self
+
+    def change_scheduler_to_ddpm(self):
+        GathDrawKit.change_scheduler_to_ddpm(self.__pipeline)
+        return self
+
+    def change_scheduler_to_dpm_solver_multistep_karras(self):
+        GathDrawKit.change_scheduler_to_dpm_solver_multistep_karras(self.__pipeline)
+        return self
+
+    def change_scheduler_to_dpm_pp_2s(self):
+        GathDrawKit.change_scheduler_to_dpm_pp_2s(self.__pipeline)
+        return self
+
+    def change_scheduler_to_dpm2a(self):
+        GathDrawKit.change_scheduler_to_dpm2a(self.__pipeline)
+        return self
+
+    def change_scheduler_to_heun(self):
+        GathDrawKit.change_scheduler_to_heun(self.__pipeline)
+        return self
+
+    def skip_clip(self, model, clip_skip: int):
+        GathDrawKit.skip_clip(self.__pipeline, model, clip_skip)
         return self
 
     def set_upscaler(self, upscaler: StableDiffusionLatentUpscalePipeline):

@@ -5,9 +5,11 @@ from typing import Union, Dict, Optional
 import torch
 from diffusers import DiffusionPipeline, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, DDIMScheduler, \
     DPMSolverMultistepScheduler, LMSDiscreteScheduler, PNDMScheduler, UniPCMultistepScheduler, KDPM2DiscreteScheduler, \
-    StableDiffusionPipeline
+    StableDiffusionPipeline, DDPMScheduler, DPMSolverSinglestepScheduler, KDPM2AncestralDiscreteScheduler, \
+    HeunDiscreteScheduler
 from diffusers.loaders import TextualInversionLoaderMixin, LoraLoaderMixin
 from safetensors.torch import load_file
+from transformers import CLIPTextModel
 
 
 class GathDrawKit:
@@ -20,7 +22,23 @@ class GathDrawKit:
         """
         https://github.com/CompVis/stable-diffusion/issues/239#issuecomment-1241838550
         """
-        pipeline.safety_checker = GathDrawKit.build_dummy_safety_checker()
+        # pipeline.safety_checker = GathDrawKit.build_dummy_safety_checker()
+        pipeline.safety_checker = None
+
+    @staticmethod
+    def skip_clip(
+            pipeline: StableDiffusionPipeline,
+            basemodel: str,
+            clip_skip: int,
+            #        torch_dtype=torch.float16
+    ):
+        text_encoder = CLIPTextModel.from_pretrained(
+            basemodel,
+            subfolder="text_encoder",
+            num_hidden_layers=12 - clip_skip,
+            # torch_dtype=torch_dtype
+        )
+        pipeline.text_encoder = text_encoder
 
     @staticmethod
     def load_lora_weight(
@@ -124,8 +142,35 @@ class GathDrawKit:
         pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config)
 
     @staticmethod
+    def change_scheduler_to_ddpm(pipeline: DiffusionPipeline):
+        pipeline.scheduler = DDPMScheduler.from_config(pipeline.scheduler.config)
+
+    @staticmethod
     def change_scheduler_to_dpm_solver_multistep(pipeline: DiffusionPipeline):
+        """
+        DPM++ 2M
+        :param pipeline:
+        :return:
+        """
         pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
+
+    @staticmethod
+    def change_scheduler_to_dpm_solver_multistep_karras(pipeline: DiffusionPipeline):
+        """
+        DPM++ 2M Karras
+        :param pipeline:
+        :return:
+        """
+        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config, use_karras_sigmas=True)
+
+    @staticmethod
+    def change_scheduler_to_dpm_pp_2s(pipeline: DiffusionPipeline):
+        """
+        DPM++ 2S
+        :param pipeline:
+        :return:
+        """
+        pipeline.scheduler = DPMSolverSinglestepScheduler.from_config(pipeline.scheduler.config)
 
     @staticmethod
     def change_scheduler_to_lms_discrete(pipeline: DiffusionPipeline):
@@ -142,6 +187,21 @@ class GathDrawKit:
     @staticmethod
     def change_scheduler_to_kdpm_2_discrete(pipeline: DiffusionPipeline):
         """
+        DPM2
         Scheduler inspired by DPM-Solver-2 and Algorthim 2 from Karras et al. (2022).
         """
         pipeline.scheduler = KDPM2DiscreteScheduler.from_config(pipeline.scheduler.config)
+
+    @staticmethod
+    def change_scheduler_to_dpm2a(pipeline: DiffusionPipeline):
+        """
+        DPM2 a
+        """
+        pipeline.scheduler = KDPM2AncestralDiscreteScheduler.from_config(pipeline.scheduler.config)
+
+    @staticmethod
+    def change_scheduler_to_heun(pipeline: DiffusionPipeline):
+        """
+        Heun
+        """
+        pipeline.scheduler = HeunDiscreteScheduler.from_config(pipeline.scheduler.config)

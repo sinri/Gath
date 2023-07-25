@@ -46,12 +46,12 @@ class GathCannyControlNet(GathControlNetDrawer):
         return self.set_control_net_image(Image.fromarray(image))
 
 if __name__ == '__main__':
-    controlnet_canny_model_path = "E:\\OneDrive\\Leqee\\ai\\repo\\lllyasviel\\sd-controlnet-canny"
+    controlnet_canny_model_path = "E:\\sinri\\HuggingFace\\lllyasviel\\sd-controlnet-canny"
     txt2img_model_path = "E:\\OneDrive\\Leqee\\ai\\repo\\stable-diffusion-v1-5"
     # source_image_path = "https://hf.co/datasets/huggingface/documentation-images/resolve/main/diffusers/input_image_vermeer.png"
     source_image_path = 'https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/56d4c63f-5be6-4ef0-b45b-7fdef85b44ad/width=450/09482-number-seed.jpeg'
 
-    controlnet_canny_model = GathCannyControlNet.load_controlnet(controlnet_canny_model_path)
+    controlnet_canny_model = GathCannyControlNet.load_controlnet(controlnet_canny_model_path,local_files_only=True)
     txt2img_model = GathCannyControlNet.load_model_with_controlnet(txt2img_model_path, controlnet_canny_model)
     kit = GathCannyControlNet(txt2img_model)
     # x.debug(source_image_path)
