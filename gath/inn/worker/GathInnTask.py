@@ -20,7 +20,7 @@ class GathInnTask:
             raise Exception('status is not APPLIED')
 
         meta = self.__build_meta_dict()
-        logger.info('meta built', meta)
+        # logger.info('meta built', meta)
 
         output_file = f'{env.inn_output_folder}{os.sep}{self.__row["application_id"]}.jpg'
         drawer = GathMetaDrawer(meta)
