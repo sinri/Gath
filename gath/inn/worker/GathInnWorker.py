@@ -19,8 +19,15 @@ class GathInnWorker:
             return None
         return GathInnTask(row)
 
-    def start(self):
+    def start(self, max_second: int = 0):
+        start_time = time.time()
         while True:
+            current_time = time.time()
+            if max_second > 0:
+                if current_time - start_time >= max_second:
+                    self.__logger.warning('MAX SECONDS EXCEEDED, DIE')
+                    break
+
             try:
                 task = self.__get_one_task_to_do()
                 if task is not None:
