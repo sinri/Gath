@@ -45,7 +45,12 @@ class GathInnTask:
         # shallow copy is enough for
         meta = env.inn_base_meta.copy()
 
+        # print(f"ROW.MODEL is {self.__row['model']}")
+
         model_part = env.inn_model_dict.get(self.__row['model'])
+
+        # print(f"MODEL DICT MAPPED AS {model_part}")
+
         if model_part is None:
             raise Exception('model is not available')
         meta['model'] = model_part
@@ -76,8 +81,9 @@ class GathInnTask:
         meta['negative_prompt'] = self.__row.get('negative_prompt')
 
         meta['long_prompt_arg'] = 1
-        if len(meta['prompt']) > 77:
-            meta['long_prompt_arg'] = int((len(meta['prompt']) + 76) / 77)
+        if model_part.get('type') is None or model_part.get('type') != 'ckpt':
+            if len(meta['prompt']) > 77:
+                meta['long_prompt_arg'] = int((len(meta['prompt']) + 76) / 77)
 
         meta['steps'] = self.__row.get('steps')
         meta['cfg'] = float(self.__row.get('cfg'))

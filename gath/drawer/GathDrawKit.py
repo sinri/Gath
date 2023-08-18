@@ -24,6 +24,7 @@ class GathDrawKit:
         """
         # pipeline.safety_checker = GathDrawKit.build_dummy_safety_checker()
         pipeline.safety_checker = None
+        pipeline.requires_safety_checker = False
 
     @staticmethod
     def skip_clip(

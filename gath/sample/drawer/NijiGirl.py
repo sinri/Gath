@@ -9,7 +9,7 @@ from gath.drawer.GathMetaDrawer import GathMetaDrawer
 from gath.sample.drawer.SampleConstant import SampleConstant
 
 if __name__ == '__main__':
-    with open('meta/LeXiaoQi-0001.yml', 'r', encoding='utf-8') as f:
+    with open('meta/NijiGirl-0004.yml', 'r', encoding='utf-8') as f:
         draw_meta = yaml.safe_load(f)
     print(draw_meta)
 

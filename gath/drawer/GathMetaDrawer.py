@@ -20,12 +20,14 @@ class GathMetaDrawer:
         # CLIP length limitation truncate workaround
         self.__long_prompt_arg = 1
         if self.__draw_meta.__contains__('long_prompt_arg'):
-            self.__long_prompt_arg = self.__draw_meta['long_prompt_arg']
+            self.__long_prompt_arg = int(self.__draw_meta['long_prompt_arg'])
 
         # whether turn off NSFW check
         self.__turn_off_nsfw_check = False
         if self.__draw_meta.__contains__('turn_off_nsfw_check'):
-            self.__turn_off_nsfw_check = (self.__draw_meta['turn_off_nsfw_check'] == 'true')
+            # print(f'[{self.__draw_meta["turn_off_nsfw_check"]}] {type(self.__draw_meta["turn_off_nsfw_check"])}')
+            self.__turn_off_nsfw_check = self.__draw_meta['turn_off_nsfw_check'] is True or \
+                (self.__draw_meta['turn_off_nsfw_check'] == 'true')
 
         self.__device = None
         if self.__draw_meta.__contains__("device"):
@@ -72,7 +74,8 @@ class GathMetaDrawer:
         if model_meta.__contains__('type') and model_meta['type'] == 'ckpt':
             # model is a file in safetensors or ckpt
             self.__base_model_string = model_meta['path']
-            drawer = GathDrawer.from_ckpt(self.__base_model_string, **params)
+            # drawer = GathDrawer.from_ckpt(self.__base_model_string, **params)
+            drawer = GathDrawer.from_single_file(self.__base_model_string, **params)
         else:
             # model is a dir or a model id str
             if tokenizer is not None:
@@ -108,6 +111,7 @@ class GathMetaDrawer:
 
         if self.__turn_off_nsfw_check:
             drawer.turn_off_nsfw_check()
+            # print("nsfw allowed")
 
         self.__decide_scheduler(drawer)
 
